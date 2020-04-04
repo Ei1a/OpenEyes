@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/video_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/head_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/video_image"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/video_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="亚马逊雨林被烧，你可能咖啡都喝不了"
+            android:layout_below="@id/video_image"
+            android:layout_toRightOf="@+id/head_icon"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:maxEms="14"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textColor="#414141"/>
+
+        <TextView
+            android:id="@+id/video_author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Megumin"
+            android:layout_below="@+id/video_title"
+            android:layout_alignLeft="@id/video_title"
+            android:layout_marginTop="3dp"
+            android:textColor="#8F8F8F"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  /  #"
+            android:layout_below="@id/video_title"
+            android:layout_toRightOf="@id/video_author_name"
+            android:layout_marginTop="3dp"
+            android:textColor="#8F8F8F"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/video_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#广告"
+            android:layout_below="@id/video_title"
+            android:layout_toRightOf="@id/separator"
+            android:layout_marginTop="3dp"
+            android:textColor="#8F8F8F"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_layout_record"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/video_image_record"
+        android:layout_width="200dp"
+        android:layout_height="110dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:id="@+id/video_title_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="年度冲浪锦集，我的坏心情都被治愈了"
+        android:layout_toRightOf="@+id/video_image_record"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textSize="16sp"
+        android:textColor="#414141"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tag_tag_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="#"
+        android:textColor="#8F8F8F"
+        android:layout_alignLeft="@+id/video_title_record"
+        android:layout_marginTop="90dp"/>
+
+    <TextView
+        android:id="@+id/video_tag_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tag_tag_record"
+        android:text="运动"
+        android:textColor="#8F8F8F"
+        android:layout_marginTop="90dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/video_image_record"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorSeparatorPlayer"/>
+</RelativeLayout>
