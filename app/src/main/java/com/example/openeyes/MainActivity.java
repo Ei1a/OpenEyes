@@ -80,10 +80,14 @@ public class MainActivity extends AppCompatActivity {
     public static String next_monthly_rank_page_url = null;
     public static String next_historical_rank_page_url = null;
     public static String next_search_page_url = null;
-    public static final String  MAIN_PAGE_URL = "http://baobab.wandoujia.com/api/v2/feed?num=2&udid=26868b32 e808498db32fd51fb422d00175e179df&vc=83";
-    public static final String WEEKLY_RANK_PAGE_URL = "http://baobab.wandoujia.com/api/v3/ranklist?num=10&strategy=weekly";
-    public static final String MONTHLY_RANK_PAGE_URL = "http://baobab.wandoujia.com/api/v3/ranklist?num=10&strategy=monthly";
-    public static final String HISTORICAL_RANK_PAGE_URL = "http://baobab.wandoujia.com/api/v3/ranklist?num=10&strategy=historical";
+//    public static final String  MAIN_PAGE_URL = "http://baobab.wandoujia.com/api/v2/feed?num=2&udid=26868b32e808498db32fd51fb422d00175e179df&vc=83";
+//    public static final String WEEKLY_RANK_PAGE_URL = "http://baobab.wandoujia.com/api/v3/ranklist?num=10&strategy=weekly";
+//    public static final String MONTHLY_RANK_PAGE_URL = "http://baobab.wandoujia.com/api/v3/ranklist?num=10&strategy=monthly";
+//    public static final String HISTORICAL_RANK_PAGE_URL = "http://baobab.wandoujia.com/api/v3/ranklist?num=10&strategy=historical";
+    public static final String  MAIN_PAGE_URL = "http://baobab.kaiyanapp.com/api/v5/index/tab/feed?udid=c5d770b188ae4ef0b2118b6bfa57241ffaee6f2b&vc=561&deviceModel=OPPO%20R11s%20Plus";
+    public static final String WEEKLY_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=weekly";
+    public static final String MONTHLY_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=monthly";
+    public static final String HISTORICAL_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=historical";
     public static RecordDatabaseHelper dbHelper;
     public static boolean isMainOrSearch = true;
 //    public static boolean isFirstLoadmoreOrNot = true;
@@ -191,9 +195,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_dashboard:
                         repalceFragment(fragment_2);
                         return true;
-//                    case R.id.navigation_notifications:
-//                        repalceFragment(fragment_3);
-//                        return true;
+                    case R.id.navigation_notifications:
+                        repalceFragment(fragment_3);
+                        return true;
                 }
                 return false;
             }
@@ -273,23 +277,23 @@ public class MainActivity extends AppCompatActivity {
                 String author = null;
                 String cover = null;
                 JSONArray jsonArray = new JSONArray("[" + jsonData + "]");
-                if (parseJson_code == PAGE_MAIN){
-                    Log.d(TAG, "parseJson: PAGE MAIN");
-                    for(int i=0;i<jsonArray.length();i++){
-                        JSONObject jsonObject =jsonArray.getJSONObject(i);
-                        next_main_page_url = jsonObject.getString("nextPageUrl"); //下一页视频的URL
-                        issueList = jsonObject.getString("issueList");
-                    }
-            /*
-                进入issueList
-             */
-                    JSONArray issueListArray = new JSONArray(issueList);
-                    for(int i=0;i<issueListArray.length();i++){
-                        JSONObject jsonObject = issueListArray.getJSONObject(i);
-                        itemList = jsonObject.getString("itemList");
-                    }
-                }
-                if(parseJson_code==PAGE_RANK_WEEKLY || parseJson_code==PAGE_RANK_MONTHLY
+//                if (parseJson_code == PAGE_MAIN){
+//                    Log.d(TAG, "parseJson: PAGE MAIN");
+//                    for(int i=0;i<jsonArray.length();i++){
+//                        JSONObject jsonObject =jsonArray.getJSONObject(i);
+//                        next_main_page_url = jsonObject.getString("nextPageUrl"); //下一页视频的URL
+//                        issueList = jsonObject.getString("issueList");
+//                    }
+//                    /*
+//                        进入issueList
+//                    */
+//                    JSONArray issueListArray = new JSONArray(issueList);
+//                    for(int i=0;i<issueListArray.length();i++){
+//                        JSONObject jsonObject = issueListArray.getJSONObject(i);
+//                        itemList = jsonObject.getString("itemList");
+//                    }
+//                }
+                if(parseJson_code==PAGE_MAIN || parseJson_code==PAGE_RANK_WEEKLY || parseJson_code==PAGE_RANK_MONTHLY
                         || parseJson_code==PAGE_RANK_HISTORICAL || parseJson_code==PAGE_SEARCH){
                     Log.d(TAG, "parseJson: PAGE RANK");
                     for(int i=0;i<jsonArray.length();i++){
@@ -301,7 +305,10 @@ public class MainActivity extends AppCompatActivity {
                             next_monthly_rank_page_url = jsonObject.getString("nextPageUrl");
                         } else if (parseJson_code == PAGE_RANK_HISTORICAL){
                             next_historical_rank_page_url = jsonObject.getString("nextPageUrl");
-                        }else {
+                        } else if(parseJson_code == PAGE_MAIN){
+                            next_main_page_url = jsonObject.getString("nextPageUrl");
+                        }
+                        else {
                             next_search_page_url = jsonObject.getString("nextPageUrl");
                         }
                     }
@@ -313,10 +320,30 @@ public class MainActivity extends AppCompatActivity {
                 for(int i=0;i<itemListArray.length();i++){
                     JSONObject jsonObject = itemListArray.getJSONObject(i);
                     String type = jsonObject.getString("type");
-                    if(!type.equals("video")){  //判断type是否为video
-                        continue;
+
+                    if(parseJson_code == PAGE_MAIN){
+                        String content = null;
+                        if(!type.equals("followCard")){//判断type类型
+                            continue;
+                        }
+                        data = jsonObject.getString("data");
+                        /*
+                        进入PAGE_MAIN的data
+                         */
+                        JSONArray mainDataArray = new JSONArray("[" + data + "]");
+                        content = mainDataArray.getJSONObject(0).getString("content");
+                        /*
+                        进入content
+                         */
+                        JSONArray contentArray = new JSONArray("[" + content + "]");
+                        data = contentArray.getJSONObject(0).getString("data");
+
+                    }else {
+                        if(!type.equals("video")){//判断type类型
+                            continue;
+                        }
+                        data = jsonObject.getString("data");
                     }
-                    data = jsonObject.getString("data");
                 /*
                     进入data
                  */
@@ -419,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
     private void initFragment() {
         fragment_1 = new FragmentFirst();
         fragment_2 = new FragmentSecond();
-//        fragment_3 = new FragmentThird();
+        fragment_3 = new FragmentThird();
         fragmentList_rank.add(new FragmentSecondOne());
         fragmentList_rank.add(new FragmentSecondTwo());
         fragmentList_rank.add(new FragmentSecondThree());
@@ -454,7 +481,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onOptionsItemSelected: clicked home");
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
-
         }
         return true;
     }

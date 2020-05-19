@@ -3,5 +3,5 @@
     <string name="title_activity_main">MGUMIN</string>
     <string name="title_home">今日推荐</string>
     <string name="title_dashboard">排行榜</string>
-    <string name="title_notifications">搜索</string>
+    <string name="title_notifications">分类</string>
 </resources>
