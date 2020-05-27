@@ -1,4 +1,4 @@
-package com.example.openeyes;
+package com.example.openeyes.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -8,24 +8,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.SearchManager;
-import android.drm.DrmStore;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import com.example.openeyes.R;
+import com.example.openeyes.View.FragmentSearch;
+import com.example.openeyes.View.MainActivity;
 
 public class SearchActivity extends AppCompatActivity {
     private String KEYWORD = null;

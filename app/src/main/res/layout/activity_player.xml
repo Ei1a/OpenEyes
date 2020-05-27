@@ -3,23 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/video_view_content"
+    <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+        android:id="@+id/gsy_video_player"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <VideoView
-            android:id="@+id/video_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
+        android:layout_height="250dp"/>
 
     <ImageView
         android:id="@+id/video_background_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/video_view_content"
+        android:layout_below="@id/gsy_video_player"
         android:scaleType="centerCrop"/>
 
 
@@ -27,7 +20,7 @@
         android:id="@+id/video_title_player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/video_view_content"
+        android:layout_below="@id/gsy_video_player"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"

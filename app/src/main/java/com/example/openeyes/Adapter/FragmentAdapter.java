@@ -1,4 +1,4 @@
-package com.example.openeyes;
+package com.example.openeyes.Adapter;
 
 import android.util.Log;
 import android.view.ViewGroup;

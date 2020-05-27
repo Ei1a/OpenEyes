@@ -1,16 +1,20 @@
-package com.example.openeyes;
+package com.example.openeyes.View;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.openeyes.Adapter.VideoAdapter;
+import com.example.openeyes.R;
+import com.example.openeyes.util.Utils;
 
 public class FragmentSearch extends Fragment {
     private RecyclerView mRecyclerView;
@@ -32,20 +36,11 @@ public class FragmentSearch extends Fragment {
                 int visibleItemCount = recyclerView.getChildCount();
                 if(newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition==totalItemCount-1 && visibleItemCount>0){
                     if(!MainActivity.next_search_page_url.equals("null")){
-                        MainActivity.parseJson_code = MainActivity.PAGE_SEARCH;
-                        MainActivity.sendHttpRequest(MainActivity.next_search_page_url);
+                        Utils utils = new Utils();
+                        utils.adapterUpdateNotify(getActivity(),mRecyclerView,MainActivity.PAGE_SEARCH,MainActivity.next_search_page_url);
+                    }else {
+                        Toast.makeText(getActivity(),"没有更多数据了噢",Toast.LENGTH_SHORT).show();
                     }
-                    /*
-                        因为请求和解析需要耗时，而且sendHttpRequest是在子线程中执行的，所以如果立即notify的话，数据还并没有加载好
-                        因此需要适当延时再notify
-                     */
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mRecyclerView.getAdapter().notifyDataSetChanged();
-                        }
-                    },300);
                 }
             }
         });

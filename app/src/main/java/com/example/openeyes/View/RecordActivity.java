@@ -1,4 +1,4 @@
-package com.example.openeyes;
+package com.example.openeyes.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.openeyes.R;
+import com.example.openeyes.View.FragmentRecord;
 
 public class RecordActivity extends AppCompatActivity {
     public static boolean isRecordListNull = true;

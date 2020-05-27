@@ -1,4 +1,4 @@
-package com.example.openeyes;
+package com.example.openeyes.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.openeyes.Bean.VideoItem;
+import com.example.openeyes.View.PlayerActivity;
+import com.example.openeyes.R;
+import com.example.openeyes.View.RecordActivity;
 
 import java.util.List;
 
@@ -37,7 +41,7 @@ public class VideoAdapterRecord extends RecyclerView.Adapter<VideoAdapterRecord.
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
                 VideoItem videoItem = videoItemList.get(position);
-                Intent intent = new Intent(mContext,PlayerActivity.class);
+                Intent intent = new Intent(mContext, PlayerActivity.class);
                 PlayerActivity.videoItem = videoItem;
                 PlayerActivity.isNormalOrDB = false;
                 mContext.startActivity(intent);

@@ -1,4 +1,4 @@
-package com.example.openeyes;
+package com.example.openeyes.View;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.openeyes.Adapter.FragmentAdapter;
+import com.example.openeyes.R;
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FragmentSecond extends Fragment {
     @Nullable

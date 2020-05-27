@@ -1,15 +1,14 @@
-package com.example.openeyes;
+package com.example.openeyes.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
-import android.database.Cursor;
+import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.Handler;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -17,13 +16,19 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.example.openeyes.Bean.VideoItem;
+import com.example.openeyes.R;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PlayerActivity extends AppCompatActivity {
     public static VideoItem videoItem;
     public static boolean isNormalOrDB;
-    private VideoView videoView;
+    private StandardGSYVideoPlayer videoPlayer;
     private TextView videoTitle;
     private TextView videoTag;
     private TextView videoDescription;
@@ -31,6 +36,7 @@ public class PlayerActivity extends AppCompatActivity {
     private TextView authorName;
     private TextView authorDescription;
     private ImageView videoBackground;
+    private OrientationUtils orientationUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +44,7 @@ public class PlayerActivity extends AppCompatActivity {
         //隐藏状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        videoView = (VideoView)findViewById(R.id.video_view);
+        videoPlayer = (StandardGSYVideoPlayer) findViewById(R.id.gsy_video_player);
         videoTitle = (TextView)findViewById(R.id.video_title_player);
         videoTag = (TextView)findViewById(R.id.video_tag_player);
         videoDescription = (TextView)findViewById(R.id.video_description_player);
@@ -55,10 +61,43 @@ public class PlayerActivity extends AppCompatActivity {
 
 
     private void initPlayerByVideoItem() {
-        videoView.setVideoPath(videoItem.getPlayUrl());
-        MediaController controller = new MediaController(this);
-        controller.setMediaPlayer(videoView);
-        videoView.setMediaController(controller);
+        /*
+        配置GSYVideoPlayer
+         */
+        videoPlayer.setUp(videoItem.getPlayUrl(),true,null);
+        //设置Title
+        videoPlayer.getTitleTextView().setVisibility(View.GONE);
+        //设置返回键
+        videoPlayer.getBackButton().setVisibility(View.VISIBLE);
+        //设置旋转
+//        orientationUtils = new OrientationUtils(this,videoPlayer);
+        //设置全屏按键
+        videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                orientationUtils.resolveByClick();
+                videoPlayer.startWindowFullscreen(PlayerActivity.this,false,true);
+            }
+        });
+        videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        //是否根据视频尺寸，自动选择竖屏全屏或横屏全屏
+        videoPlayer.setAutoFullWithSize(true);
+        //全屏动画
+        videoPlayer.setShowFullAnimation(true);
+        //小屏时触摸滑动
+        videoPlayer.setIsTouchWiget(true);
+        //循环播放
+        videoPlayer.setLooping(true);
+        //设置控制UI显示时间
+        videoPlayer.setDismissControlTime(1500);
+        //播放
+        videoPlayer.getStartButton().performClick();
+
         Glide.with(PlayerActivity.this).load(videoItem.getBackgroundUrl()).into(videoBackground);
         videoBackground.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
         videoTitle.setText(videoItem.getTitle());
@@ -67,7 +106,6 @@ public class PlayerActivity extends AppCompatActivity {
         Glide.with(PlayerActivity.this).load(videoItem.getHeadIconUrl()).into(authorHeadIcon);
         authorName.setText(videoItem.getAuthorName());
         authorDescription.setText(videoItem.getAuthorDescription());
-        videoView.start();
     }
 
     private void updateRecord() {
@@ -93,5 +131,41 @@ public class PlayerActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.fix_open,R.anim.player_to_main);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        videoPlayer.onVideoPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoPlayer.onVideoResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GSYVideoManager.releaseAllVideos();
+//        if(orientationUtils != null){
+//            orientationUtils.releaseListener();
+//        }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+//        if(orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+//            videoPlayer.getFullscreenButton().performClick();
+//            return;
+//        }
+//        //释放所有
+//        videoPlayer.setVideoAllCallBack(null);
+        if(GSYVideoManager.backFromWindowFull(this)){
+            return;
+        }
+        super.onBackPressed();
     }
 }

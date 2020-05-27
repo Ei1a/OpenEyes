@@ -1,4 +1,4 @@
-package com.example.openeyes;
+package com.example.openeyes.View;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.openeyes.Adapter.VideoAdapterRecord;
+import com.example.openeyes.R;
 
 public class FragmentRecord extends Fragment {
     private RecyclerView mRecyclerView;

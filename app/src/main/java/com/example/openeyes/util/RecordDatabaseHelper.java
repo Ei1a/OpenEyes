@@ -1,4 +1,4 @@
-package com.example.openeyes;
+package com.example.openeyes.util;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

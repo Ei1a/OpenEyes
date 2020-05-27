@@ -1,4 +1,4 @@
-package com.example.openeyes;
+package com.example.openeyes.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,13 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.openeyes.Bean.VideoItem;
+import com.example.openeyes.View.MainActivity;
+import com.example.openeyes.View.PlayerActivity;
+import com.example.openeyes.R;
+import com.example.openeyes.View.SearchActivity;
 
 import java.util.List;
 
@@ -39,7 +43,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
                 VideoItem videoItem = videoItemList.get(position);
-                Intent intent = new Intent(mContext,PlayerActivity.class);
+                Intent intent = new Intent(mContext, PlayerActivity.class);
                 PlayerActivity.videoItem = videoItem;
                 PlayerActivity.isNormalOrDB = true;
                 mContext.startActivity(intent);

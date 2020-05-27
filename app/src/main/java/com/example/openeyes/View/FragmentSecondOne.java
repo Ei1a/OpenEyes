@@ -1,17 +1,21 @@
-package com.example.openeyes;
+package com.example.openeyes.View;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.openeyes.Adapter.VideoAdapter;
+import com.example.openeyes.R;
+import com.example.openeyes.util.Utils;
 
 public class FragmentSecondOne extends Fragment {
     private VideoAdapter adapter;
@@ -35,21 +39,13 @@ public class FragmentSecondOne extends Fragment {
                 if(newState==RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition==totalItemCount-1 &&visibleItemCount>0 ){
                     MainActivity activity = (MainActivity) getActivity();
                     if(!activity.next_weekly_rank_page_url.equals("null")){
+                        Utils utils = new Utils();
                         Log.d("mDebug", "onScrollStateChanged: next page url != null");
                         Log.d("mDebug", activity.next_weekly_rank_page_url);
-                        activity.parseJson_code = activity.PAGE_RANK_WEEKLY;
-                        activity.sendHttpRequest(activity.next_weekly_rank_page_url);
-                    /*
-                        因为请求和解析需要耗时，而且sendHttpRequest是在子线程中执行的，所以如果立即notify的话，数据还并没有加载好
-                        因此需要适当延时再notify
-                     */
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mRecyclerView.getAdapter().notifyDataSetChanged();
-                            }
-                        },300);
+                        utils.adapterUpdateNotify(activity,mRecyclerView,activity.PAGE_RANK_WEEKLY,activity.next_weekly_rank_page_url);
+
+                    }else {
+                        Toast.makeText(activity,"没有更多数据了噢",Toast.LENGTH_SHORT).show();
                     }
                 }
             }

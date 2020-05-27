@@ -13,19 +13,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".WelcomeActivity">
+            android:name=".View.SortActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".View.WelcomeActivity">
             <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN"/>
-                <category
-                    android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecordActivity">
-        </activity>
-        <activity android:name=".PlayerActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".View.RecordActivity"></activity>
+        <activity
+            android:name=".View.PlayerActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".View.SearchActivity" />
+        <activity android:name=".View.MainActivity" />
     </application>
 
 </manifest>
