@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.openeyes.View.MainActivity;
+import com.example.openeyes.view.MainActivity;
 
 public class Utils {
     public Utils(){

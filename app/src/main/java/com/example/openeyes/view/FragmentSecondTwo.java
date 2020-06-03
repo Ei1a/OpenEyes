@@ -1,4 +1,4 @@
-package com.example.openeyes.View;
+package com.example.openeyes.view;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.openeyes.Adapter.VideoAdapter;
+import com.example.openeyes.adapter.VideoAdapter;
 import com.example.openeyes.R;
 import com.example.openeyes.util.Utils;
 

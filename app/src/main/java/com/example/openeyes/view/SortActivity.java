@@ -1,4 +1,4 @@
-package com.example.openeyes.View;
+package com.example.openeyes.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.openeyes.Adapter.SortVideoAdapter;
-import com.example.openeyes.Bean.SortItem;
+import com.example.openeyes.adapter.SortVideoAdapter;
+import com.example.openeyes.bean.SortItem;
 import com.example.openeyes.R;
 import com.example.openeyes.util.Utils;
 import com.google.android.material.appbar.CollapsingToolbarLayout;

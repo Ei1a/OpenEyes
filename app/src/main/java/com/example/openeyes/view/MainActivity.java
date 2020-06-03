@@ -1,12 +1,12 @@
-package com.example.openeyes.View;
+package com.example.openeyes.view;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
-import com.example.openeyes.Bean.SortItem;
-import com.example.openeyes.Bean.VideoItem;
+import com.example.openeyes.bean.SortItem;
+import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.R;
 import com.example.openeyes.util.RecordDatabaseHelper;
 import com.example.openeyes.util.Utils;
@@ -91,8 +91,10 @@ public class MainActivity extends AppCompatActivity {
     private static Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
+            Log.d(TAG, "handleMessage: ");
             switch (msg.what){
                 case PARSE_DATA:
+                    Log.d(TAG, "handleMessage: ");
                     parseJson((String)msg.obj);
             }
         }
@@ -113,12 +115,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         //侧滑菜单
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //设置Actionbar
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
             actionBar.setDisplayShowTitleEnabled(false);
         }
+        //侧滑菜单页面
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         navigationView.setCheckedItem(R.id.guanzhu);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -143,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
             道理同notifyDataChanged，需要延时
             否则设置默认选中主页也不会显示出item
          */
-
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -151,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             }
         },450);
 //        navView.setSelectedItemId(R.id.navigation_home);
-        //初始化排行榜界面
+        //初始化观看记录
         initRecord();
 
     }
@@ -484,19 +487,23 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try{
                     Log.d(TAG, page_url);
+                    Log.d(TAG, "after page_url");
                     OkHttpClient client = new OkHttpClient();
+                    Log.d(TAG, "after new okHttpClient");
                     Request request = new Request.Builder()
                             .url(page_url)
                             .build();
+                    Log.d(TAG, "after build request");
                     Response response = client.newCall(request).execute();
-                    Log.d(TAG, "run: ");
+                    Log.d(TAG, "after new Call execute");
                     String responseData = response.body().string();
-                    Log.d(TAG,responseData);
+//                    Log.d(TAG,responseData);
                     //发送解析请求
                     Message message = new Message();
                     message.what = PARSE_DATA;
                     message.obj = responseData;
                     handler.sendMessage(message);
+                    Log.d(TAG, "after sendMessage");
                 }catch (Exception e){
                     e.printStackTrace();
                 }

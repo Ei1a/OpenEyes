@@ -1,4 +1,4 @@
-package com.example.openeyes.View;
+package com.example.openeyes.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -19,8 +19,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.openeyes.R;
-import com.example.openeyes.View.FragmentSearch;
-import com.example.openeyes.View.MainActivity;
 
 public class SearchActivity extends AppCompatActivity {
     private String KEYWORD = null;

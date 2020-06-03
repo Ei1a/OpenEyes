@@ -1,4 +1,4 @@
-package com.example.openeyes.Bean;
+package com.example.openeyes.bean;
 
 public class VideoItem {
     private String imageUrl;

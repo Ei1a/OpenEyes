@@ -1,4 +1,4 @@
-package com.example.openeyes.Adapter;
+package com.example.openeyes.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.openeyes.Bean.VideoItem;
-import com.example.openeyes.View.PlayerActivity;
+import com.example.openeyes.bean.VideoItem;
+import com.example.openeyes.view.PlayerActivity;
 import com.example.openeyes.R;
-import com.example.openeyes.View.RecordActivity;
+import com.example.openeyes.view.RecordActivity;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.openeyes.View;
+package com.example.openeyes.view;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.openeyes.Adapter.FragmentAdapter;
+import com.example.openeyes.adapter.FragmentAdapter;
 import com.example.openeyes.R;
 import com.google.android.material.tabs.TabLayout;
 

@@ -1,4 +1,4 @@
-package com.example.openeyes.View;
+package com.example.openeyes.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.openeyes.Adapter.SortAdapter;
+import com.example.openeyes.adapter.SortAdapter;
 import com.example.openeyes.R;
 
 public class FragmentThird extends Fragment {

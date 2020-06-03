@@ -1,4 +1,4 @@
-package com.example.openeyes.Adapter;
+package com.example.openeyes.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +13,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.openeyes.Bean.VideoItem;
-import com.example.openeyes.View.PlayerActivity;
+import com.example.openeyes.bean.VideoItem;
+import com.example.openeyes.view.PlayerActivity;
 import com.example.openeyes.R;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
@@ -77,14 +77,14 @@ public class SortVideoAdapter extends RecyclerView.Adapter<SortVideoAdapter.View
         //设置返回键
         holder.videoPlayer.getBackButton().setVisibility(View.GONE);
         //隐藏全屏按键
-//        holder.videoPlayer.getFullscreenButton().setVisibility(View.GONE);
+        holder.videoPlayer.getFullscreenButton().setVisibility(View.GONE);
         //设置全屏按键
-        holder.videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.videoPlayer.startWindowFullscreen(mContext,false,true);
-            }
-        });
+//        holder.videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                holder.videoPlayer.startWindowFullscreen(mContext,false,true);
+//            }
+//        });
         //防止错位设置
         holder.videoPlayer.setPlayTag(TAG_RECYCLERVIEW);
         holder.videoPlayer.setPlayPosition(position);

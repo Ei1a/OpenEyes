@@ -1,4 +1,4 @@
-package com.example.openeyes.View;
+package com.example.openeyes.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
