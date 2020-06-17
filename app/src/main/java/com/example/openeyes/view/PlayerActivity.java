@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.R;
+import com.example.openeyes.util.Value;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
@@ -117,7 +118,7 @@ public class PlayerActivity extends AppCompatActivity {
         values.put("authorDescription",videoItem.getAuthorDescription());
         values.put("backgroundUrl",videoItem.getBackgroundUrl());
         db.insert("RecordItem",null,values);
-        MainActivity.videoItemList_record.add(videoItem);
+        Value.videoItemList_record.add(videoItem);
         if(RecordActivity.isRecordListNull){
             RecordActivity.isRecordListNull = false;
         }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.openeyes.adapter.VideoAdapter;
 import com.example.openeyes.R;
 import com.example.openeyes.util.Utils;
+import com.example.openeyes.util.Value;
 
 public class FragmentFirst extends Fragment {
     private VideoAdapter adapter;
@@ -26,7 +27,7 @@ public class FragmentFirst extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.first_fragment,container,false);
         mRecyclerView = view.findViewById(R.id.video_item_recycler_view);
-        adapter = new VideoAdapter(MainActivity.videoItemList);
+        adapter = new VideoAdapter(Value.videoItemList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false));
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -41,9 +42,9 @@ public class FragmentFirst extends Fragment {
                 int visibleItemCount = recyclerView.getChildCount();
                 if(newState==RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition==totalItemCount-1 && visibleItemCount>0){
                     activity = (MainActivity) getActivity();
-                    if(!activity.next_main_page_url.equals("null")){
+                    if(!Value.next_main_page_url.equals("null")){
                         Utils utils = new Utils();
-                        utils.adapterUpdateNotify(activity,mRecyclerView,activity.PAGE_MAIN,activity.next_main_page_url);
+                        utils.adapterUpdateNotify(activity,mRecyclerView,Value.PAGE_MAIN,Value.next_main_page_url);
                     }
                 }
             }

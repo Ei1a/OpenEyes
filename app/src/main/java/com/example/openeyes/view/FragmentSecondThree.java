@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.openeyes.adapter.VideoAdapter;
 import com.example.openeyes.R;
 import com.example.openeyes.util.Utils;
+import com.example.openeyes.util.Value;
 
 public class FragmentSecondThree extends Fragment {
     private RecyclerView mRecyclerView;
@@ -24,7 +25,7 @@ public class FragmentSecondThree extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.second_three_fragment,container,false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.historical_video_item_recycler_view);
-        adapter = new VideoAdapter(MainActivity.videoItemList_historicalRank);
+        adapter = new VideoAdapter(Value.videoItemList_historicalRank);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false));
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -36,9 +37,9 @@ public class FragmentSecondThree extends Fragment {
                 int lastVisibleItemPosition = lm.findLastVisibleItemPosition();
                 if(newState==RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition==totalItemCount-1 && visibleItemCount>0){
                     MainActivity activity = (MainActivity)getActivity();
-                    if(!activity.next_historical_rank_page_url.equals("null")){
+                    if(!Value.next_historical_rank_page_url.equals("null")){
                         Utils utils = new Utils();
-                        utils.adapterUpdateNotify(activity,mRecyclerView,activity.PAGE_RANK_MONTHLY,activity.next_historical_rank_page_url);
+                        utils.adapterUpdateNotify(activity,mRecyclerView,Value.PAGE_RANK_MONTHLY,Value.next_historical_rank_page_url);
                     }else {
                         Toast.makeText(activity,"没有更多数据了噢",Toast.LENGTH_SHORT).show();
                     }

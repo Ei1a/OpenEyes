@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="1051125426@qq.com"
+        android:text="Sachiko.qux@qq.com"
         android:textColor="#FFFFFF"
         android:textSize="14sp"/>
 

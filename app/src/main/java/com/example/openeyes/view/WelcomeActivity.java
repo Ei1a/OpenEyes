@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.openeyes.R;
+import com.example.openeyes.util.Utils;
+import com.example.openeyes.util.Value;
 
 public class WelcomeActivity extends AppCompatActivity {
     public static String imagesUrl = null;
@@ -38,8 +40,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
         linearLayout.startAnimation(animation);
         animation.setFillAfter(true);
-        MainActivity.parseJson_code = MainActivity.PAGE_WELCOME;
-        MainActivity.sendHttpRequest(WELCOME_PAGE_URL);
+//        MainActivity.parseJson_code = MainActivity.PAGE_WELCOME;
+        Utils.sendHttpRequest(WELCOME_PAGE_URL,Value.PAGE_WELCOME);
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

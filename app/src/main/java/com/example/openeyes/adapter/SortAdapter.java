@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.openeyes.bean.SortItem;
+import com.example.openeyes.util.Utils;
+import com.example.openeyes.util.Value;
 import com.example.openeyes.view.MainActivity;
 import com.example.openeyes.R;
 import com.example.openeyes.view.SortActivity;
@@ -53,13 +55,13 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
                     String id = sortItem.getID();
                     String sort_item_header_url = SORT_PAGE_HEADER_URL + id;
                     final String sort_item_video_url = SORT_PAGE_VIDEO_URL + id;
-                    MainActivity.parseJson_code = MainActivity.PAGE_SORT_ITEM_HEADER;
-                    MainActivity.sendHttpRequest(sort_item_header_url);
+//                    MainActivity.parseJson_code = MainActivity.PAGE_SORT_ITEM_HEADER;
+                    Utils.sendHttpRequest(sort_item_header_url, Value.PAGE_SORT_ITEM_HEADER);
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MainActivity.parseJson_code = MainActivity.PAGE_SORT_ITEM_VIDEO;
-                            MainActivity.sendHttpRequest(sort_item_video_url);
+//                            MainActivity.parseJson_code = MainActivity.PAGE_SORT_ITEM_VIDEO;
+                            Utils.sendHttpRequest(sort_item_video_url,Value.PAGE_SORT_ITEM_VIDEO);
                         }
                     },200);
                     Intent intent = new Intent(mContext, SortActivity.class);

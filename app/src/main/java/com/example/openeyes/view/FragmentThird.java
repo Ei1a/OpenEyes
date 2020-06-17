@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.openeyes.adapter.SortAdapter;
 import com.example.openeyes.R;
+import com.example.openeyes.util.Value;
 
 public class FragmentThird extends Fragment {
     private final String TAG = "mDebug";
@@ -24,7 +25,7 @@ public class FragmentThird extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.third_fragment_fix,container,false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.sort_recycler_view);
-        adapter = new SortAdapter(MainActivity.sortItemList);
+        adapter = new SortAdapter(Value.sortItemList);
         final GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override

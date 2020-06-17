@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.openeyes.adapter.VideoAdapter;
 import com.example.openeyes.R;
 import com.example.openeyes.util.Utils;
+import com.example.openeyes.util.Value;
 
 public class FragmentSearch extends Fragment {
     private RecyclerView mRecyclerView;
@@ -24,7 +25,7 @@ public class FragmentSearch extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_result_fragment,container,false);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.search_result_video_item_recycler_view);
-        adapter = new VideoAdapter(MainActivity.videoItemList_search);
+        adapter = new VideoAdapter(Value.videoItemList_search);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false));
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -35,9 +36,9 @@ public class FragmentSearch extends Fragment {
                 int lastVisibleItemPosition = lm.findLastVisibleItemPosition();
                 int visibleItemCount = recyclerView.getChildCount();
                 if(newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition==totalItemCount-1 && visibleItemCount>0){
-                    if(!MainActivity.next_search_page_url.equals("null")){
+                    if(!Value.next_search_page_url.equals("null")){
                         Utils utils = new Utils();
-                        utils.adapterUpdateNotify(getActivity(),mRecyclerView,MainActivity.PAGE_SEARCH,MainActivity.next_search_page_url);
+                        utils.adapterUpdateNotify(getActivity(),mRecyclerView,Value.PAGE_SEARCH,Value.next_search_page_url);
                     }else {
                         Toast.makeText(getActivity(),"没有更多数据了噢",Toast.LENGTH_SHORT).show();
                     }

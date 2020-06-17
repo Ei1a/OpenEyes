@@ -21,6 +21,7 @@ import com.example.openeyes.adapter.SortVideoAdapter;
 import com.example.openeyes.bean.SortItem;
 import com.example.openeyes.R;
 import com.example.openeyes.util.Utils;
+import com.example.openeyes.util.Value;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
@@ -68,7 +69,7 @@ public class SortActivity extends AppCompatActivity {
         textview_header_tag_follow_count = (TextView) findViewById(R.id.sort_item_header_tag_follow_count);
         textView_header_look_count = (TextView) findViewById(R.id.sort_item_header_look_count);
         recyclerView_sort_video = (RecyclerView) findViewById(R.id.sort_item_recycler_view);
-        final SortVideoAdapter adapter = new SortVideoAdapter(MainActivity.videoItemList_sort);
+        final SortVideoAdapter adapter = new SortVideoAdapter(Value.videoItemList_sort);
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) new LinearLayoutManager(mContext,RecyclerView.VERTICAL,false);
         recyclerView_sort_video.setLayoutManager(linearLayoutManager);
         recyclerView_sort_video.setAdapter(adapter);
@@ -100,9 +101,9 @@ public class SortActivity extends AppCompatActivity {
                 int visibleItemCount = recyclerView.getChildCount();
                 int totalItemCount = recyclerView.getAdapter().getItemCount();
                 if(newState==RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem==totalItemCount-1 && visibleItemCount>0){
-                    if(MainActivity.next_sort_page_url != null){
+                    if(Value.next_sort_page_url != null){
                         Utils utils = new Utils();
-                        utils.adapterUpdateNotify(mContext,recyclerView_sort_video,MainActivity.PAGE_SORT_ITEM_VIDEO,MainActivity.next_sort_page_url);
+                        utils.adapterUpdateNotify(mContext,recyclerView_sort_video,Value.PAGE_SORT_ITEM_VIDEO,Value.next_sort_page_url);
                     }
                 }
                 //停下时自动播放第一个完整显示的Item的视频
@@ -149,7 +150,7 @@ public class SortActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MainActivity.videoItemList_sort.clear();
+        Value.videoItemList_sort.clear();
         GSYVideoManager.releaseAllVideos();
     }
 

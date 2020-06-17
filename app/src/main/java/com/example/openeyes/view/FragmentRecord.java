@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.openeyes.adapter.VideoAdapterRecord;
 import com.example.openeyes.R;
+import com.example.openeyes.util.Value;
 
 public class FragmentRecord extends Fragment {
     private RecyclerView mRecyclerView;
@@ -22,7 +23,7 @@ public class FragmentRecord extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.record_fragment,container,false);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.record_video_item_recycler_view);
-        adapter = new VideoAdapterRecord(MainActivity.videoItemList_record);
+        adapter = new VideoAdapterRecord(Value.videoItemList_record);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false));
         mRecyclerView.setAdapter(adapter);
         return view;

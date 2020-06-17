@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.openeyes.R;
+import com.example.openeyes.util.Utils;
+import com.example.openeyes.util.Value;
 
 public class SearchActivity extends AppCompatActivity {
     private String KEYWORD = null;
@@ -59,10 +61,10 @@ public class SearchActivity extends AppCompatActivity {
                 textTips = (TextView)findViewById(R.id.text_tips);
                 KEYWORD = query;
                 String KEYWORD_URL="http://baobab.kaiyanapp.com/api/v1/search?num=10&query=" + KEYWORD + "&start=10";
-                MainActivity.videoItemList_search.clear();  //避免叠加之前搜素的数据
-                MainActivity.parseJson_code = MainActivity.PAGE_SEARCH;
+                Value.videoItemList_search.clear();  //避免叠加之前搜素的数据
+//                MainActivity.parseJson_code = MainActivity.PAGE_SEARCH;
                 Log.d("mDebug", KEYWORD_URL);
-                MainActivity.sendHttpRequest(KEYWORD_URL);
+                Utils.sendHttpRequest(KEYWORD_URL,Value.PAGE_SEARCH);
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
