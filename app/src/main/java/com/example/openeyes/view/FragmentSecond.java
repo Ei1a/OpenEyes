@@ -24,7 +24,6 @@ public class FragmentSecond extends Fragment {
         View view = inflater.inflate(R.layout.second_fragment,container,false);
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager_tab);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-//        MainActivity mainActivity = (MainActivity) getActivity();
         FragmentAdapter adapter = new FragmentAdapter(getChildFragmentManager(), Value.fragmentList_rank);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);

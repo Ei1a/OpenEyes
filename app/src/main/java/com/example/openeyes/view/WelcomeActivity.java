@@ -40,16 +40,12 @@ public class WelcomeActivity extends AppCompatActivity {
 
         linearLayout.startAnimation(animation);
         animation.setFillAfter(true);
-//        MainActivity.parseJson_code = MainActivity.PAGE_WELCOME;
         Utils.sendHttpRequest(WELCOME_PAGE_URL,Value.PAGE_WELCOME);
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Glide.with(WelcomeActivity.this).load(imagesUrl).into(welcomeImageView);
-                //提前加载主页list
-                MainActivity.initVideoItem();
-//                imageTitleTextView.setText(imagesTitle);
             }
         },500);
         handler.postDelayed(new Runnable() {
@@ -59,13 +55,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
             }
         },700);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //提前加载排行榜视频
-                MainActivity.initRankVideoItem();
-            }
-        },2100);
         handler.postDelayed(new Runnable() {
             @Override
 

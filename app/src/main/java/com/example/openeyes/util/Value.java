@@ -37,9 +37,9 @@ public class Value {
     public static String next_search_page_url = null;
     public static String next_sort_page_url = null;
 
-    public static final String  MAIN_PAGE_URL = "http://baobab.kaiyanapp.com/api/v5/index/tab/feed?udid=c5d770b188ae4ef0b2118b6bfa57241ffaee6f2b&vc=561&deviceModel=OPPO%20R11s%20Plus";
-    public static final String WEEKLY_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=weekly";
-    public static final String MONTHLY_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=monthly";
-    public static final String HISTORICAL_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=historical";
-    public static final String SORT_ITEM_URL = "http://baobab.kaiyanapp.com/api/v4/categories/all?udid=c5d770b188ae4ef0b2118b6bfa57241ffaee6f2b&vc=561&deviceModel=OPPO%20R11s%20Plus";
+//    public static final String  MAIN_PAGE_URL = "http://baobab.kaiyanapp.com/api/v5/index/tab/feed?udid=c5d770b188ae4ef0b2118b6bfa57241ffaee6f2b&vc=561&deviceModel=OPPO%20R11s%20Plus";
+//    public static final String WEEKLY_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=weekly";
+//    public static final String MONTHLY_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=monthly";
+//    public static final String HISTORICAL_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=historical";
+//    public static final String SORT_ITEM_URL = "http://baobab.kaiyanapp.com/api/v4/categories/all?udid=c5d770b188ae4ef0b2118b6bfa57241ffaee6f2b&vc=561&deviceModel=OPPO%20R11s%20Plus";
 }

@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.openeyes.bean.SortItem;
@@ -18,23 +19,25 @@ import com.example.openeyes.util.Value;
 import com.example.openeyes.view.MainActivity;
 import com.example.openeyes.R;
 import com.example.openeyes.view.SortActivity;
+import com.example.openeyes.viewmodel.MainViewModel;
 
 import java.util.List;
 
 public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
-    private final String SORT_PAGE_HEADER_URL = "http://baobab.kaiyanapp.com/api/v6/tag/index?id=";
-    private final String SORT_PAGE_VIDEO_URL = "http://baobab.kaiyanapp.com/api/v1/tag/videos?id=";
-    private final String TAG = "mDebug";
     private Context mContext;
     private List<SortItem> sortItemList;
+
+    /*
+     * Item type
+     */
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_NORMAL = 1;
     private View headerView = null;
-    private Handler handler = new Handler();
 
     public SortAdapter(List<SortItem> sortItemList){
         this.sortItemList = sortItemList;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,31 +54,14 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     int position = holder.getAdapterPosition();
-                    SortItem sortItem = sortItemList.get(position-1);
-                    String id = sortItem.getID();
-                    String sort_item_header_url = SORT_PAGE_HEADER_URL + id;
-                    final String sort_item_video_url = SORT_PAGE_VIDEO_URL + id;
-//                    MainActivity.parseJson_code = MainActivity.PAGE_SORT_ITEM_HEADER;
-                    Utils.sendHttpRequest(sort_item_header_url, Value.PAGE_SORT_ITEM_HEADER);
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-//                            MainActivity.parseJson_code = MainActivity.PAGE_SORT_ITEM_VIDEO;
-                            Utils.sendHttpRequest(sort_item_video_url,Value.PAGE_SORT_ITEM_VIDEO);
-                        }
-                    },200);
+                    //启动SortActivity
                     Intent intent = new Intent(mContext, SortActivity.class);
+                    intent.putExtra("sortId", sortItemList.get(position-1).getID());
                     mContext.startActivity(intent);
                 }
             };
             holder.sortLayoutLeft.setOnClickListener(listener);
             holder.sortLayoutRight.setOnClickListener(listener);
-//            holder.sortImageHeader.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                }
-//            });
             return holder;
         }
     }

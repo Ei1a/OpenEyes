@@ -1,81 +1,83 @@
-package com.example.openeyes.util;
+package com.example.openeyes.viewmodel;
 
-import android.content.Context;
-import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.openeyes.bean.SortItem;
+import com.example.openeyes.bean.SortItemHeader;
 import com.example.openeyes.bean.VideoItem;
-import com.example.openeyes.view.MainActivity;
+import com.example.openeyes.util.Utils;
+import com.example.openeyes.util.Value;
 import com.example.openeyes.view.SortActivity;
 import com.example.openeyes.view.WelcomeActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class Utils {
-    private static final String TAG = "mDebug";
-    private static final int PARSE_DATA = 1;
+public class MainViewModel extends ViewModel {
+    private final String TAG = "mDebug";
 
-    public static Handler handler = new Handler(){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            switch(msg.what){
-                case PARSE_DATA:
-                    parseJson((String)msg.obj,msg.arg1);
-            }
-        }
-    };
-    public Utils(){
+    /*
+     * URL
+     */
+    public final String  MAIN_PAGE_URL = "http://baobab.kaiyanapp.com/api/v5/index/tab/feed?udid=c5d770b188ae4ef0b2118b6bfa57241ffaee6f2b&vc=561&deviceModel=OPPO%20R11s%20Plus";
+    public final String WEEKLY_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=weekly";
+    public final String MONTHLY_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=monthly";
+    public final String HISTORICAL_RANK_PAGE_URL = "http://baobab.kaiyanapp.com/api/v4/rankList/videos?strategy=historical";
+    public final String SORT_ITEM_URL = "http://baobab.kaiyanapp.com/api/v4/categories/all?udid=c5d770b188ae4ef0b2118b6bfa57241ffaee6f2b&vc=561&deviceModel=OPPO%20R11s%20Plus";
+    public final String SORT_PAGE_HEADER_URL = "http://baobab.kaiyanapp.com/api/v6/tag/index?id=";
+    public final String SORT_PAGE_VIDEO_URL = "http://baobab.kaiyanapp.com/api/v1/tag/videos?id=";
 
-    }
+    /*
+     * 页面标识
+     */
+    public final int PAGE_MAIN = 1;
+    public final int PAGE_RANK_WEEKLY = 2;
+    public final int PAGE_RANK_MONTHLY = 3;
+    public final int PAGE_RANK_HISTORICAL = 4;
+    public final int PAGE_SEARCH = 5;
+    public final int PAGE_WELCOME = 6;
+    public final int PAGE_SORT = 7;
+    public final int PAGE_SORT_ITEM_HEADER = 8;
+    public final int PAGE_SORT_ITEM_VIDEO = 9;
 
-    public void adapterUpdateNotify(Context context, final RecyclerView recyclerView, int code ,String url){
-        Handler handler = new Handler();
-        sendHttpRequest(url,code);
-        final Toast toast = Toast.makeText(context,"玩命加载中...", Toast.LENGTH_SHORT);
-        toast.show();
-        /*
-        因为请求和解析需要耗时，而且sendHttpRequest是在子线程中执行的，所以如果立即notify的话，数据还并没有加载好
-        因此需要适当延时再notify
-        */
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.getAdapter().notifyDataSetChanged();
-                toast.setText("好咯");
-            }
-        },300);
-    }
+    /*
+     * 各页面下一页url
+     */
+    public String next_main_page_url = "null";
+    public String next_weekly_rank_page_url = "null";
+    public String next_monthly_rank_page_url = "null";
+    public String next_historical_rank_page_url = "null";
+    public String next_search_page_url = "null";
+    public String next_sort_page_url = "null";
 
-    public String parseID(String origin){
-        boolean isDigit = false;
-        String[] result = origin.split("/");
-        for(String temp : result){
-            for(int i=0;i<temp.length();i++){
-                if(!Character.isDigit(temp.charAt(i))){
-                    isDigit = false;
-                    break;
-                }
-                isDigit = true;
-            }
-            if(isDigit){
-                return temp;
-            }
-        }
-        return null;
-    }
+    /*
+     * livedata
+     */
+    public MutableLiveData<List<VideoItem>> requestMainItemResult = new MutableLiveData<>();
+    public MutableLiveData<List<VideoItem>> requestRankWeeklyItemResult = new MutableLiveData<>();
+    public MutableLiveData<List<VideoItem>> requestRankMonthlyItemResult = new MutableLiveData<>();
+    public MutableLiveData<List<VideoItem>> requestRankHistoricalItemResult = new MutableLiveData<>();
+    public MutableLiveData<List<VideoItem>> requestSearchItemResult = new MutableLiveData<>();
+    public MutableLiveData<List<VideoItem>> requestSortItemResult = new MutableLiveData<>();
+    public MutableLiveData<List<SortItem>> requestSortKindItemResult = new MutableLiveData<>();
+    public MutableLiveData<SortItemHeader> requestSortItemHeaderResult = new MutableLiveData<>();
 
-    public static void sendHttpRequest(String url,int parseCode){
+    /*
+     * 发起网络请求
+     */
+    public void sendHttpRequest(String url,int parseCode){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -87,13 +89,14 @@ public class Utils {
                             .build();
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
-//                    Log.d(TAG,responseData);
-                    //发送解析请求
-                    Message message = new Message();
-                    message.what = PARSE_DATA;
-                    message.obj = responseData;
-                    message.arg1 = parseCode;
-                    handler.sendMessage(message);
+                    if(response.isSuccessful()){
+                        //请求成功
+                        parseJson(responseData, parseCode);
+                    }else{
+                        //请求失败
+                        // -> 待优化
+                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -101,9 +104,14 @@ public class Utils {
         }).start();
     }
 
-    public static void parseJson(String jsonData,int parseCode){
+    /*
+     * 解析json
+     */
+    private void parseJson(String jsonData,int parseCode){
         try {
-            if(parseCode == Value.PAGE_WELCOME){
+            List<VideoItem> videoItems = new ArrayList<>();
+            List<SortItem> sortItemList = new ArrayList<>();
+            if(parseCode == PAGE_WELCOME){
                 Log.d("welcomeTest", "get in");
                 String images = null;
                 String imagesUrl = null;
@@ -125,7 +133,7 @@ public class Utils {
                 WelcomeActivity.imagesUrl = "http://s.cn.bing.net" + imagesUrl;
                 Log.d("welcomeTest", WelcomeActivity.imagesUrl);
                 WelcomeActivity.imagesTitle = imagesTitle;
-            }else if(parseCode == Value.PAGE_SORT_ITEM_HEADER){
+            }else if(parseCode == PAGE_SORT_ITEM_HEADER){
                 Log.d(TAG, "parseJson: into PAGE_SORT_ITEM_HEADER");
                 String tagInfo = null;
                 String name = null;
@@ -144,23 +152,9 @@ public class Utils {
                 bgPicture = tagInfoArray.getJSONObject(0).getString("headerImage");
                 tagFollowCount = tagInfoArray.getJSONObject(0).getInt("tagFollowCount");
                 lookCount = tagInfoArray.getJSONObject(0).getInt("lookCount");
-                Log.d(TAG, "parseJson: PAGE_SORT_ITEM_HEADER " + bgPicture);
-//                /*
-//                存入Sort Activity
-//                 */
-//                Log.d(TAG, "parseJson: test sortItemList.size " + Value.sortItemList.size());
-//                for(int i=0;i<Value.sortItemList.size();i++){
-//                    SortItem temp = Value.sortItemList.get(i);
-//                    if(temp.getSortName().equals("#"+name)){
-//                        temp.setHeaderName(name);
-//                        temp.setBgPicture(bgPicture);
-//                        temp.setDescription(description);
-//                        temp.setTagFollowCount(tagFollowCount);
-//                        temp.setLookCount(lookCount);
-//                        SortActivity.sortItem = temp;
-//                        break;
-//                    }
-//                }
+                //post到主线程
+                requestSortItemHeaderResult.postValue(new SortItemHeader(name, description, bgPicture, tagFollowCount, lookCount));
+
             }else {
                 Log.d(TAG, "parseJson: is not welcome");
                 String itemList = null;
@@ -170,20 +164,20 @@ public class Utils {
                 JSONArray jsonArray = new JSONArray("[" + jsonData + "]");
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 itemList = jsonObject.getString("itemList");
-                if(parseCode==Value.PAGE_MAIN || parseCode==Value.PAGE_RANK_WEEKLY || parseCode==Value.PAGE_RANK_MONTHLY
-                        || parseCode==Value.PAGE_RANK_HISTORICAL || parseCode==Value.PAGE_SEARCH || parseCode==Value.PAGE_SORT_ITEM_VIDEO){
-                    if(parseCode == Value.PAGE_RANK_WEEKLY){
-                        Value.next_weekly_rank_page_url = jsonObject.getString("nextPageUrl");
-                    } else if (parseCode == Value.PAGE_RANK_MONTHLY){
-                        Value.next_monthly_rank_page_url = jsonObject.getString("nextPageUrl");
-                    } else if (parseCode == Value.PAGE_RANK_HISTORICAL){
-                        Value.next_historical_rank_page_url = jsonObject.getString("nextPageUrl");
-                    } else if (parseCode == Value.PAGE_MAIN){
-                        Value.next_main_page_url = jsonObject.getString("nextPageUrl");
-                    } else if (parseCode == Value.PAGE_SORT_ITEM_VIDEO){
-                        Value.next_sort_page_url = jsonObject.getString("nextPageUrl");
+                if(parseCode==PAGE_MAIN || parseCode==PAGE_RANK_WEEKLY || parseCode==PAGE_RANK_MONTHLY
+                        || parseCode==PAGE_RANK_HISTORICAL || parseCode==PAGE_SEARCH || parseCode==PAGE_SORT_ITEM_VIDEO){
+                    if(parseCode == PAGE_RANK_WEEKLY){
+                        next_weekly_rank_page_url = jsonObject.getString("nextPageUrl");
+                    } else if (parseCode == PAGE_RANK_MONTHLY){
+                        next_monthly_rank_page_url = jsonObject.getString("nextPageUrl");
+                    } else if (parseCode == PAGE_RANK_HISTORICAL){
+                        next_historical_rank_page_url = jsonObject.getString("nextPageUrl");
+                    } else if (parseCode == PAGE_MAIN){
+                        next_main_page_url = jsonObject.getString("nextPageUrl");
+                    } else if (parseCode == PAGE_SORT_ITEM_VIDEO){
+                        next_sort_page_url = jsonObject.getString("nextPageUrl");
                     } else {
-                        Value.next_search_page_url = jsonObject.getString("nextPageUrl");
+                        next_search_page_url = jsonObject.getString("nextPageUrl");
                     }
                 }
                 /*
@@ -194,7 +188,7 @@ public class Utils {
                 for(int i=0;i<itemListArray.length();i++){
                     JSONObject jsonObject_itemList = itemListArray.getJSONObject(i);
                     String type = jsonObject_itemList.getString("type");
-                    if(parseCode==Value.PAGE_MAIN || parseCode==Value.PAGE_SORT_ITEM_VIDEO){
+                    if(parseCode==PAGE_MAIN || parseCode==PAGE_SORT_ITEM_VIDEO){
                         String content = null;
                         if(!type.equals("followCard")){//判断type类型
                             continue;
@@ -211,7 +205,7 @@ public class Utils {
                         JSONArray contentArray = new JSONArray("[" + content + "]");
                         data = contentArray.getJSONObject(0).getString("data");
 
-                    }else if(parseCode == Value.PAGE_SORT){
+                    }else if(parseCode == PAGE_SORT){
                         data = jsonObject_itemList.getString("data");
                     }else {
                         if(!type.equals("video")){//判断type类型
@@ -219,14 +213,14 @@ public class Utils {
                         }
                         data = jsonObject_itemList.getString("data");
                     }
-                /*
-                    进入data
-                 */
+                    /*
+                     * 进入data
+                     */
                     JSONArray dataArray = new JSONArray("[" + data + "]");
                     Log.d(TAG, "parseJson: Into data");
                     for(int j=0;j<dataArray.length();j++){
                         JSONObject jsonObject_data = dataArray.getJSONObject(j);
-                        if(parseCode == Value.PAGE_SORT){
+                        if(parseCode == PAGE_SORT){
                             Log.d(TAG, "parseJson: PAGE SORT");
                             String sort_image = null;
                             String sort_name = null;
@@ -241,8 +235,8 @@ public class Utils {
                             /*
                             提取ID
                              */
-                            sort_ID = new Utils().parseID(sort_ID_origin);
-                            Value.sortItemList.add(new SortItem(sort_ID,sort_image,sort_name));
+                            sort_ID = parseID(sort_ID_origin);
+                            sortItemList.add(new SortItem(sort_ID,sort_image,sort_name));
                         }
                         else {
                             String video_author_head_icon = null;
@@ -259,12 +253,14 @@ public class Utils {
                             /*
                             进入author
                             */
-                            JSONArray authorArray = new JSONArray("[" + author + "]");
-                            for(int k=0;k<authorArray.length();k++){
-                                JSONObject jsonObject_data_author = authorArray.getJSONObject(k);
-                                video_author_head_icon = jsonObject_data_author.getString("icon");
-                                video_author_name = jsonObject_data_author.getString("name");
-                                video_author_description = jsonObject_data_author.getString("description");
+                            if(!author.equals("null")){
+                                JSONArray authorArray = new JSONArray("[" + author + "]");
+                                for(int k=0;k<authorArray.length();k++){
+                                    JSONObject jsonObject_data_author = authorArray.getJSONObject(k);
+                                    video_author_head_icon = jsonObject_data_author.getString("icon");
+                                    video_author_name = jsonObject_data_author.getString("name");
+                                    video_author_description = jsonObject_data_author.getString("description");
+                                }
                             }
                             /*
                             进入cover
@@ -276,42 +272,67 @@ public class Utils {
                                 video_cover_blurred_url = jsonObject_data_cover.getString("blurred");
                             }
                             /*
-                            加入VideoItem
-                            */
+                             * 加入VideoItem
+                             */
                             VideoItem videoItem = new VideoItem(video_cover_feed_url,video_author_head_icon,
                                     video_title,video_author_name,video_tag,video_play_url,video_description,
                                     video_author_description,video_cover_blurred_url);
-                            if(parseCode == Value.PAGE_MAIN){
-                                Value.videoItemList.add(videoItem);
-                                Log.d(TAG, "parseJson: videoItemList add");
-                            }
-                            if(parseCode == Value.PAGE_RANK_WEEKLY){
-                                Value.videoItemList_weeklyRank.add(videoItem);
-                                Log.d(TAG, "parseJson: weekly rank list add");
-                            }
-                            if(parseCode == Value.PAGE_RANK_MONTHLY){
-                                Value.videoItemList_monthlyRank.add(videoItem);
-                                Log.d(TAG, "parseJson: monthly rank list add");
-                            }
-                            if(parseCode == Value.PAGE_RANK_HISTORICAL){
-                                Value.videoItemList_historicalRank.add(videoItem);
-                                Log.d(TAG, "parseJson: historical rank list add");
-                            }
-                            if(parseCode == Value.PAGE_SEARCH){
-                                Value.videoItemList_search.add(videoItem);
-                                Log.d(TAG, "parseJson: search list add");
-                            }
-                            if(parseCode == Value.PAGE_SORT_ITEM_VIDEO){
-                                Value.videoItemList_sort.add(videoItem);
-                            }
+                            /*
+                             * 放入list
+                             */
+                            videoItems.add(videoItem);
                         }
                     }
                 }
             }
-//            parseJson_code = -1;
+            /*
+             * 解析完毕post到主线程
+             */
+            switch(parseCode){
+                case PAGE_MAIN:
+                    requestMainItemResult.postValue(videoItems);
+                    break;
+                case PAGE_RANK_WEEKLY:
+                    requestRankWeeklyItemResult.postValue(videoItems);
+                    break;
+                case PAGE_RANK_MONTHLY:
+                    requestRankMonthlyItemResult.postValue(videoItems);
+                    break;
+                case PAGE_RANK_HISTORICAL:
+                    requestRankHistoricalItemResult.postValue(videoItems);
+                    break;
+                case PAGE_SEARCH:
+                    requestSearchItemResult.postValue(videoItems);
+                    break;
+                case PAGE_SORT_ITEM_VIDEO:
+                    requestSortItemResult.postValue(videoItems);
+                    break;
+                case PAGE_SORT:
+                    requestSortKindItemResult.postValue(sortItemList);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /*
+     * 解析id
+     */
+    public String parseID(String origin){
+        boolean isDigit = false;
+        String[] result = origin.split("/");
+        for(String temp : result){
+            for(int i=0;i<temp.length();i++){
+                if(!Character.isDigit(temp.charAt(i))){
+                    isDigit = false;
+                    break;
+                }
+                isDigit = true;
+            }
+            if(isDigit){
+                return temp;
+            }
+        }
+        return null;
+    }
 }
