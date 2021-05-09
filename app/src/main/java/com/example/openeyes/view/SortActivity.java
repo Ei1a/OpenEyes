@@ -89,10 +89,6 @@ public class SortActivity extends AppCompatActivity {
          * 配置CollapsingToolbarLayout
          */
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.coolapsing_toolbar);
-//        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-//        collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
-//        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.BLACK);
-//        collapsingToolbarLayout.setCollapsedTitleGravity(Gravity.CENTER);
         collapsingToolbarLayout.setScrimsShown(false);
 
         /*
