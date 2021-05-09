@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment fragment_1;
     private Fragment fragment_2;
     private Fragment fragment_3;
+    private Fragment preFragment;
 
     public static RecordDatabaseHelper dbHelper;
     public static boolean isMainOrSearch = true;
@@ -190,8 +191,17 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "repalceFragment: ");
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.wait_replace,fragment);
+        if(preFragment != null){
+            transaction.hide(preFragment);
+        }
+        if(fragment.isAdded()){
+            transaction.show(fragment);
+        }else{
+            transaction.add(R.id.wait_replace,fragment);
+//            transaction.replace(R.id.wait_replace,fragment);
+        }
         transaction.commit();
+        preFragment = fragment;
     }
 
     /*

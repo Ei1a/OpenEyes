@@ -14,6 +14,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,9 +26,11 @@ import com.example.openeyes.bean.SortItem;
 import com.example.openeyes.R;
 import com.example.openeyes.bean.SortItemHeader;
 import com.example.openeyes.bean.VideoItem;
+import com.example.openeyes.util.CollapsingToolbarLayoutListener;
 import com.example.openeyes.util.Utils;
 import com.example.openeyes.util.Value;
 import com.example.openeyes.viewmodel.MainViewModel;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
@@ -36,11 +40,13 @@ import java.util.List;
 
 public class SortActivity extends AppCompatActivity {
     private final String TAG = "mDebug";
+    private AppBarLayout mAppBarLayout;
     private ImageView imageView_header;
     private TextView textView_header_name;
     private TextView textView_header_description;
     private TextView textview_header_tag_follow_count;
     private TextView textView_header_look_count;
+    private TextView textView_title;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private RecyclerView recyclerView_sort_video;
     private Context mContext = SortActivity.this;
@@ -83,8 +89,10 @@ public class SortActivity extends AppCompatActivity {
          * 配置CollapsingToolbarLayout
          */
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.coolapsing_toolbar);
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.BLACK);
+//        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+//        collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
+//        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.BLACK);
+//        collapsingToolbarLayout.setCollapsedTitleGravity(Gravity.CENTER);
         collapsingToolbarLayout.setScrimsShown(false);
 
         /*
@@ -95,6 +103,8 @@ public class SortActivity extends AppCompatActivity {
         textView_header_description = (TextView) findViewById(R.id.sort_item_header_description);
         textview_header_tag_follow_count = (TextView) findViewById(R.id.sort_item_header_tag_follow_count);
         textView_header_look_count = (TextView) findViewById(R.id.sort_item_header_look_count);
+        textView_title = (TextView) findViewById(R.id.text_collapsing_tile);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout_sort);
 
         /*
          * 配置RecyclerView
@@ -105,6 +115,23 @@ public class SortActivity extends AppCompatActivity {
         recyclerView_sort_video.setLayoutManager(linearLayoutManager);
         recyclerView_sort_video.setAdapter(adapter);
 
+        mAppBarLayout.addOnOffsetChangedListener(new CollapsingToolbarLayoutListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, int state) {
+                if(state == STATE_EXPANDED){
+                    // 展开状态
+                    Log.d("ToolbarLayoutDebug", "展开状态");
+                }else if(state == STATE_COLLAPSED){
+                    // 折叠状态
+                    Log.d("ToolbarLayoutDebug", "折叠状态");
+                    textView_title.setVisibility(View.VISIBLE);
+                }else{
+                    // 中间状态
+                    Log.d("ToolbarLayoutDebug", "中间状态");
+                    textView_title.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     /*
@@ -204,7 +231,8 @@ public class SortActivity extends AppCompatActivity {
             textView_header_description.setText(sortItemHeader.getDescription());
             textview_header_tag_follow_count.setText(sortItemHeader.getTagFollowCount() + "人关注 | ");
             textView_header_look_count.setText(sortItemHeader.getLookCount() + "人参与");
-            collapsingToolbarLayout.setTitle(sortItemHeader.getSortName());
+//            collapsingToolbarLayout.setTitle(sortItemHeader.getSortName());
+            textView_title.setText(sortItemHeader.getSortName());
         });
 
         /*
@@ -214,6 +242,19 @@ public class SortActivity extends AppCompatActivity {
             videoItemList.addAll(videoItems);
             recyclerView_sort_video.getAdapter().notifyDataSetChanged();
         });
+    }
+
+    /*
+     * 配置返回按钮
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -97,6 +98,8 @@ public class FragmentFirst extends Fragment {
                 if(newState==RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition==totalItemCount-1 && visibleItemCount>0){
                     if(!mViewModel.next_main_page_url.equals("null")){
                         mViewModel.sendHttpRequest(mViewModel.next_main_page_url, mViewModel.PAGE_MAIN);
+                    }else{
+                        Toast.makeText(getContext(),"没有更多内容了噢~", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
