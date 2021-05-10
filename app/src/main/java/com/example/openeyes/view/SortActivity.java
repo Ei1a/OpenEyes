@@ -111,6 +111,9 @@ public class SortActivity extends AppCompatActivity {
         recyclerView_sort_video.setLayoutManager(linearLayoutManager);
         recyclerView_sort_video.setAdapter(adapter);
 
+        /*
+         * 监听标题栏状态
+         */
         mAppBarLayout.addOnOffsetChangedListener(new CollapsingToolbarLayoutListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, int state) {
