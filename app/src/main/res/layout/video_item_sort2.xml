@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/head_icon_sort"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/video_author_name_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#414141"
+        tools:text="健身视频精选"
+        app:layout_constraintLeft_toRightOf="@id/head_icon_sort"
+        app:layout_constraintTop_toTopOf="@id/head_icon_sort"/>
+
+
+    <TextView
+        android:id="@+id/separator_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发布: "
+        android:textSize="13sp"
+        android:textColor="#8F8F8F"
+        android:layout_marginTop="3dp"
+        app:layout_constraintLeft_toLeftOf="@id/video_author_name_sort"
+        app:layout_constraintTop_toBottomOf="@id/video_author_name_sort"/>
+
+    <TextView
+        android:id="@+id/video_title_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#414141"
+        android:maxLines="1"
+        android:maxEms="16"
+        android:ellipsize="end"
+        tools:text="李小龙扮演者 Mike Moh 的健身方式哈哈哈哈哈哈"
+        app:layout_constraintLeft_toRightOf="@id/separator_sort"
+        app:layout_constraintBottom_toBottomOf="@id/separator_sort"/>
+
+    <TextView
+        android:id="@+id/video_description_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#414141"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        tools:text="关于这辆保时捷Macan S本来呢，我是想去喝个下午茶，优雅一下，但经过两天的试驾，我发现真的不可以！！因为他真的很有驾驶乐趣，所以我选了一项与这辆车的驾驶感非常相同的运动，走~咱们一起去骑马"
+        app:layout_constraintTop_toBottomOf="@id/head_icon_sort"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+        android:id="@+id/gsy_video_player"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/video_description_sort"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

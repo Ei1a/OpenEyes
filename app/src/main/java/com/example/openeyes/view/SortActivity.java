@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -117,18 +119,26 @@ public class SortActivity extends AppCompatActivity {
         mAppBarLayout.addOnOffsetChangedListener(new CollapsingToolbarLayoutListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, int state) {
+                Drawable backIcon = getResources().getDrawable(R.drawable.ic_action_name);
                 if(state == STATE_EXPANDED){
                     // 展开状态
                     Log.d("ToolbarLayoutDebug", "展开状态");
+                    // 调整返回按钮为白色
+                    backIcon.setColorFilter(getResources().getColor(R.color.backIconWhite), PorterDuff.Mode.SRC_ATOP);
                 }else if(state == STATE_COLLAPSED){
                     // 折叠状态
                     Log.d("ToolbarLayoutDebug", "折叠状态");
                     textView_title.setVisibility(View.VISIBLE);
+                    // 调整返回按钮为黑色
+                    backIcon.setColorFilter(getResources().getColor(R.color.backIconBlack), PorterDuff.Mode.SRC_ATOP);
                 }else{
                     // 中间状态
                     Log.d("ToolbarLayoutDebug", "中间状态");
                     textView_title.setVisibility(View.GONE);
+                    // 调整返回按钮为白色
+                    backIcon.setColorFilter(getResources().getColor(R.color.backIconWhite), PorterDuff.Mode.SRC_ATOP);
                 }
+                getSupportActionBar().setHomeAsUpIndicator(backIcon);
             }
         });
     }

@@ -2,10 +2,12 @@ package com.example.openeyes.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,7 +53,7 @@ public class SortVideoAdapter extends RecyclerView.Adapter<SortVideoAdapter.View
         holder.videoTitle.setText(videoItem.getTitle());
         holder.videoDescription.setText(videoItem.getVideoDescription());
         //跳转PlayerActivity
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, PlayerActivity.class);
@@ -118,7 +120,7 @@ public class SortVideoAdapter extends RecyclerView.Adapter<SortVideoAdapter.View
         TextView videoTitle;
         TextView videoDescription;
         StandardGSYVideoPlayer videoPlayer;
-        CardView cardView;
+        RelativeLayout relativeLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             headIcon = (CircleImageView) itemView.findViewById(R.id.head_icon_sort);
@@ -126,7 +128,8 @@ public class SortVideoAdapter extends RecyclerView.Adapter<SortVideoAdapter.View
             videoTitle = (TextView) itemView.findViewById(R.id.video_title_sort);
             videoDescription = (TextView) itemView.findViewById(R.id.video_description_sort);
             videoPlayer = (StandardGSYVideoPlayer) itemView.findViewById(R.id.gsy_video_player);
-            cardView = (CardView) itemView.findViewById(R.id.card_view_sort);
+            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relative_layout_sort);
+
         }
     }
 }

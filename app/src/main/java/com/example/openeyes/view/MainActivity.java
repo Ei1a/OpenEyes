@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -111,6 +112,19 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this,"正在完善嗷~",Toast.LENGTH_SHORT).show();
                 }
                 return true;
+            }
+        });
+        /*
+         * 侧滑headr头像点击监听
+         */
+//        Log.d("headViewTest", navigationView.getHeaderView(0)+"");
+        CircleImageView headIconImage = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.icon_image);
+        headIconImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"点击头像",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, PersonImformationActivity.class);
+                startActivity(intent);
             }
         });
         //初始化Fragment

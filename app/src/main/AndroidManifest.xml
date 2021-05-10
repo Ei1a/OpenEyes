@@ -12,23 +12,23 @@
         android:roundIcon="@drawable/launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".view.PersonImformationActivity"></activity>
         <activity
             android:name=".view.SortActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".view.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.RecordActivity"></activity>
+        <activity android:name=".view.RecordActivity" />
         <activity
             android:name=".view.PlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity android:name=".view.SearchActivity" />
         <activity android:name=".view.MainActivity" />
     </application>
