@@ -9,14 +9,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.openeyes.bean.LocationReuslt;
 import com.example.openeyes.bean.SortItem;
 import com.example.openeyes.bean.VideoItem;
-import com.example.openeyes.view.MainActivity;
-import com.example.openeyes.view.SortActivity;
 import com.example.openeyes.view.WelcomeActivity;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -312,6 +320,107 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+     * 解析全国地区名
+     */
+    public static LocationReuslt parseLocation(){
+        try {
+            //读入全国地区Json
+            String jsonData = readTxtFile();
+            //变量声明
+            String province;
+            String city;
+            String county;
+
+            //关联省级
+            List<String> provincesList = new ArrayList<>();
+            //关联区级
+            List<List<List<String>>> countiesList = new ArrayList<>();
+            //关联市级
+            List<List<String>> citiesList = new ArrayList<>();
+
+            /*
+             * 开始解析
+             */
+            JSONArray jsonArray = new JSONArray("[" + jsonData + "]");
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            String provinceList = jsonObject.getString("provinceList");
+            /*
+             * 进入provinceList
+             */
+            JSONArray provinceListArray = new JSONArray(provinceList);
+            for(int i=0;i<provinceListArray.length();i++){
+                JSONObject object_province = provinceListArray.getJSONObject(i);
+                province = object_province.getString("name");
+                //关联省级
+                provincesList.add(province);
+                String cityList = object_province.getString("cityList");
+                /*
+                 * 进入cityList
+                 */
+                JSONArray cityListArray = new JSONArray(cityList);
+                //关联区级
+                List<List<String>> list2 = new ArrayList<>();
+                //关联市级
+                List<String> list3 = new ArrayList<>();
+                for(int j=0;j<cityListArray.length();j++){
+                    JSONObject object_city = cityListArray.getJSONObject(j);
+                    city = object_city.getString("name");
+                    list3.add(city);
+                    String countyList = object_city.getString("countyList");
+                    /*
+                     * 进入countyList
+                     */
+                    JSONArray countyListArray = new JSONArray(countyList);
+                    //关联区级
+                    List<String> list1 = new ArrayList<>();
+                    for(int z=0;z<countyListArray.length();z++){
+                        JSONObject object_county = countyListArray.getJSONObject(z);
+                        county = object_county.getString("name");
+                        if(!county.equals("市辖区")){
+                            //关联区级
+                            list1.add(county);
+                        }
+                    }
+                    //关联区级
+                    list2.add(list1);
+                }
+                //关联区级
+                countiesList.add(list2);
+                //关联市级
+                citiesList.add(list3);
+            }
+            //完成解析，返回结果
+            return new LocationReuslt(provincesList, citiesList, countiesList);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            //非正常结束，返回null
+            return null;
+        }
+    }
+
+    /*
+     * 读取文件
+     */
+    private static String readTxtFile(){
+        String fileName = "/sdcard/Download/LocationApi.txt";
+        File file = new File(fileName);
+        StringBuffer content = new StringBuffer();
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                content.append(line);
+            }
+            fileInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content.toString();
     }
 
 }
