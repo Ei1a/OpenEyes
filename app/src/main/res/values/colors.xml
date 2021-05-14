@@ -4,9 +4,24 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorTitlePlayer">#FFFFFF</color>
-    <color name="colorDescriptionPlayer">#E7E6E6</color>
+    <color name="colorDescriptionPlayer">#CDCDCD</color>
     <color name="colorSeparatorPlayer">#A7A7A7</color>
     <color name="colorToolbar">#F0F0F0</color>
     <color name="backIconBlack">#8A8A8A</color>
     <color name="backIconWhite">#FFFFFF</color>
+    <color name="colorButtonDown">#BCBCBC</color>
+
+    <!--前景色-->
+    <color name="easy_photos_fg_primary">#8A8A8A</color>
+    <color name="easy_photos_fg_primary_text">#000000</color>
+    <color name="easy_photos_fg_primary_dark">#9b9b9b</color>
+    <color name="easy_photos_fg_accent">#1874BD</color>
+    <!--背景色-->
+    <color name="easy_photos_bg_primary">#f9f9f9</color>
+    <!--操作栏颜色-->
+    <color name="easy_photos_bar_primary">#F0F0F0</color>
+    <color name="easy_photos_bar_primary_dark">#f9f9f9</color>
+    <color name="easy_photos_bar_primary_translation">#b4ffffff</color>
+    <!--状态栏-->
+    <color name="easy_photos_status_bar">#F0F0F0</color>//
 </resources>

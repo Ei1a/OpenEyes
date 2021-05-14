@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#000">
 
     <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
         android:id="@+id/gsy_video_player"
@@ -69,13 +71,92 @@
         android:layout_marginTop="10dp"
         android:textColor="@color/colorDescriptionPlayer"/>
 
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout_oprations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/video_description_player">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/constraint_layout_like"
+            app:layout_constraintHorizontal_chainStyle="spread">
+
+            <ImageView
+                android:id="@+id/image_download"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_download"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/text_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下载"
+                android:textColor="@color/colorTitlePlayer"
+                android:textSize="13sp"
+                android:layout_marginLeft="5dp"
+                app:layout_constraintLeft_toRightOf="@id/image_download"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/constraint_layout_download"
+            app:layout_constraintLeft_toRightOf="@+id/constraint_layout_download"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/image_like"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_like_bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <TextView
+                android:id="@+id/text_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="收藏"
+                android:textColor="@color/colorTitlePlayer"
+                android:textSize="13sp"
+                android:layout_marginLeft="5dp"
+                app:layout_constraintLeft_toRightOf="@id/image_like"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    <view-->
+<!--        android:id="@+id/view_gide_line"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_centerHorizontal="true"/>-->
+
+
     <View
         android:id="@+id/separator_line_player_one"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/colorSeparatorPlayer"
-        android:layout_below="@+id/video_description_player"
-        android:layout_marginTop="15dp"/>
+        android:layout_below="@+id/constraint_layout_oprations"
+        android:layout_marginTop="10dp"/>
 
     <RelativeLayout
         android:id="@+id/video_author_show_player"
@@ -103,12 +184,15 @@
 
         <TextView
             android:id="@+id/video_author_description"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/video_author_name_player"
             android:layout_marginTop="5dp"
             android:layout_alignLeft="@id/video_author_name_player"
             android:textSize="13sp"
+            android:maxLines="1"
+            android:maxEms="20"
+            android:ellipsize="end"
             android:textColor="@color/colorDescriptionPlayer"/>
     </RelativeLayout>
 

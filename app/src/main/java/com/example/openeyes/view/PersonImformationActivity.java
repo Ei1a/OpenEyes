@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +26,16 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.bigkoo.pickerview.view.TimePickerView;
+import com.bumptech.glide.Glide;
 import com.example.openeyes.R;
+import com.example.openeyes.adapter.GlideEngine;
 import com.example.openeyes.bean.LocationReuslt;
 import com.example.openeyes.util.Utils;
+import com.huantansheng.easyphotos.EasyPhotos;
+import com.huantansheng.easyphotos.callback.SelectCallback;
+import com.huantansheng.easyphotos.models.album.entity.Photo;
+import com.huantansheng.easyphotos.ui.EasyPhotosActivity;
+import com.huantansheng.easyphotos.utils.result.EasyResult;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,9 +53,11 @@ public class PersonImformationActivity extends AppCompatActivity {
     private EditText editTextSchool;
     private EditText editTextWork;
     private Button buttonChangeHeadIcon;
+    private ImageView imageHeadIcon;
 
     private LocationReuslt location;
     private final List<String> sexList = new ArrayList<>();
+    private ArrayList<Photo> photoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +84,7 @@ public class PersonImformationActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(false);
+            Log.d("marginDebug", "margin = " + toolbar.getContentInsetLeft());
         }
 
         // 得到View引用
@@ -87,6 +98,7 @@ public class PersonImformationActivity extends AppCompatActivity {
         editTextSchool = (EditText) findViewById(R.id.edit_person_school);
         editTextWork = (EditText) findViewById(R.id.edit_person_work);
         buttonChangeHeadIcon = (Button) findViewById(R.id.button_person_change_head_icon);
+        imageHeadIcon = (ImageView) findViewById(R.id.image_person_head_icon);
     }
 
     /*
@@ -121,6 +133,19 @@ public class PersonImformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(PersonImformationActivity.this, "更换头像", Toast.LENGTH_SHORT).show();
+                EasyPhotos.createAlbum(PersonImformationActivity.this, true, false, GlideEngine.getInstance())
+                        .setFileProviderAuthority("com.example.openeyes")
+                        .start(new SelectCallback() {
+                            @Override
+                            public void onResult(ArrayList<Photo> photos, boolean isOriginal) {
+                                Glide.with(PersonImformationActivity.this).load(photos.get(0).uri).into(imageHeadIcon);
+                            }
+
+                            @Override
+                            public void onCancel() {
+
+                            }
+                        });
             }
         });
 

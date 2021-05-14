@@ -61,6 +61,7 @@
                 app:layout_constraintRight_toRightOf="parent">
 
                 <ImageView
+                    android:id="@+id/image_person_head_icon"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:background="@drawable/icon_head"
