@@ -22,6 +22,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
 
 dependencies {
@@ -31,7 +36,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+//    implementation 'jp.wasabeef:glide-transformations:4.3.0'
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
     implementation 'com.shuyu:GSYVideoPlayer:7.1.4'
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.2.0'
@@ -39,6 +45,8 @@ dependencies {
 //    implementation 'com.squareup.leakcanary:leakcanary-android:2.5'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
     implementation 'com.github.HuanTanSheng:EasyPhotos:3.1.3'
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    implementation 'org.greenrobot:eventbus:3.2.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

@@ -9,10 +9,11 @@ import java.util.List;
 
 public class FragmentAdapter extends FragmentPagerAdapter {
     private List<Fragment>fragmentList_rank;
-    private String[] tab_list = {"周排行","月排行","总排行"};
-    public FragmentAdapter(FragmentManager fm,List<Fragment>fragmentList_rank) {
+    private String[] tab_list = null;
+    public FragmentAdapter(FragmentManager fm,List<Fragment>fragmentList_rank, String[] tab_list) {
         super(fm);
         this.fragmentList_rank = fragmentList_rank;
+        this.tab_list = tab_list;
     }
 
     @Override

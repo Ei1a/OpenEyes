@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import com.example.openeyes.bean.LoginEvent;
 import com.example.openeyes.bean.SortItem;
 import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.R;
@@ -34,6 +35,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,7 +50,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
+    /*
+     * Tag
+     */
     private static final String TAG = "mDebug";
+    private boolean isSignIn = false;
 
     /*
      * View
@@ -80,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
     private void initView(){
         //设置状态栏内容为黑色
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        //注册Eventbus
+        EventBus.getDefault().register(this);
 
         //toolBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -114,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         /*
          * 侧滑headr头像点击监听
          */
@@ -122,8 +133,17 @@ public class MainActivity extends AppCompatActivity {
         headIconImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"点击头像",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, PersonImformationActivity.class);
+                Intent intent;
+                /*
+                 * 判断是否登陆
+                 */
+                if(isSignIn){
+                    //已登陆，跳转个人资料
+                    intent = new Intent(MainActivity.this, PersonImformationActivity.class);
+                }else{
+                    //未登录，跳转登陆界面
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
+                }
                 startActivity(intent);
             }
         });
@@ -245,5 +265,17 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginEvent(LoginEvent event){
+        isSignIn = event.getStatus();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 注销EventBus
+        EventBus.getDefault().unregister(this);
     }
 }

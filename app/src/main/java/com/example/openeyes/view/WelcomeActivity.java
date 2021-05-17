@@ -33,6 +33,7 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         linearLayout = (LinearLayout)findViewById(R.id.image_welcome_layout);
         welcomeImageView = (ImageView)findViewById(R.id.image_welcome);
         imageTitleTextView = (TextView)findViewById(R.id.image_title);

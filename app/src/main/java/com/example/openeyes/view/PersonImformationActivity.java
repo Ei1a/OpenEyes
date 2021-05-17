@@ -30,12 +30,15 @@ import com.bumptech.glide.Glide;
 import com.example.openeyes.R;
 import com.example.openeyes.adapter.GlideEngine;
 import com.example.openeyes.bean.LocationReuslt;
+import com.example.openeyes.bean.LoginEvent;
 import com.example.openeyes.util.Utils;
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.callback.SelectCallback;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.ui.EasyPhotosActivity;
 import com.huantansheng.easyphotos.utils.result.EasyResult;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -231,7 +234,9 @@ public class PersonImformationActivity extends AppCompatActivity {
         textExitLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PersonImformationActivity.this, "退出成功", Toast.LENGTH_SHORT).show();
+                //更新登陆状态
+                EventBus.getDefault().post(new LoginEvent(false));
+                finish();
             }
         });
     }

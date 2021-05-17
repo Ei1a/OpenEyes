@@ -23,5 +23,5 @@
     <color name="easy_photos_bar_primary_dark">#f9f9f9</color>
     <color name="easy_photos_bar_primary_translation">#b4ffffff</color>
     <!--状态栏-->
-    <color name="easy_photos_status_bar">#F0F0F0</color>//
+    <color name="easy_photos_status_bar">#F0F0F0</color>
 </resources>
