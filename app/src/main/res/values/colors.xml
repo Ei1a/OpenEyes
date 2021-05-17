@@ -9,7 +9,7 @@
     <color name="colorToolbar">#F0F0F0</color>
     <color name="backIconBlack">#8A8A8A</color>
     <color name="backIconWhite">#FFFFFF</color>
-    <color name="colorButtonDown">#BCBCBC</color>
+    <color name="colorButtonDown">#ABABAB</color>
 
     <!--前景色-->
     <color name="easy_photos_fg_primary">#8A8A8A</color>

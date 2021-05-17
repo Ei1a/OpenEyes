@@ -1,6 +1,7 @@
 package com.example.openeyes.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,6 +35,13 @@ public class PlayerActivity extends AppCompatActivity {
     private TextView authorDescription;
     private ImageView videoBackground;
     private OrientationUtils orientationUtils;
+    private ConstraintLayout constraintDownload;
+    private ConstraintLayout constraintLike;
+    private ImageView imageDownload;
+    private ImageView imageLike;
+    private TextView textDownload;
+    private TextView textLike;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +57,12 @@ public class PlayerActivity extends AppCompatActivity {
         authorName = (TextView)findViewById(R.id.video_author_name_player);
         authorDescription = (TextView)findViewById(R.id.video_author_description);
         videoBackground = (ImageView)findViewById(R.id.video_background_player);
+        constraintDownload = (ConstraintLayout) findViewById(R.id.constraint_layout_download);
+        constraintLike = (ConstraintLayout) findViewById(R.id.constraint_layout_like);
+        imageDownload = (ImageView) findViewById(R.id.image_download);
+        imageLike = (ImageView) findViewById(R.id.image_like);
+        textDownload = (TextView) findViewById(R.id.text_download);
+        textLike = (TextView) findViewById(R.id.text_like);
 
         initPlayerByVideoItem();
         if(isNormalOrDB){
@@ -103,6 +117,33 @@ public class PlayerActivity extends AppCompatActivity {
         Glide.with(PlayerActivity.this).load(videoItem.getHeadIconUrl()).into(authorHeadIcon);
         authorName.setText(videoItem.getAuthorName());
         authorDescription.setText(videoItem.getAuthorDescription());
+
+        /*
+         * 点击监听
+         */
+        constraintDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(textDownload.getText().equals("下载")){
+                    imageDownload.setBackground(getDrawable(R.drawable.ic_download_already));
+                    textDownload.setText("已下载");
+                    textDownload.setTextColor(getResources().getColor(R.color.colorButtonDown));
+                }
+            }
+        });
+
+        constraintLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(textLike.getText().equals("收藏")){
+                    imageLike.setBackground(getDrawable(R.drawable.ic_like_already));
+                    textLike.setText("已收藏");
+                }else{
+                    imageLike.setBackground(getDrawable(R.drawable.ic_like_bold));
+                    textLike.setText("收藏");
+                }
+            }
+        });
     }
 
     private void updateRecord() {
