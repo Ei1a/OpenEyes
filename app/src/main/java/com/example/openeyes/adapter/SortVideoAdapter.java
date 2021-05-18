@@ -18,11 +18,13 @@ import com.bumptech.glide.Glide;
 import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.view.PlayerActivity;
 import com.example.openeyes.R;
+import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class SortVideoAdapter extends RecyclerView.Adapter<SortVideoAdapter.ViewHolder> {
     private final String TAG = "mDebug";
@@ -104,7 +106,8 @@ public class SortVideoAdapter extends RecyclerView.Adapter<SortVideoAdapter.View
         holder.videoPlayer.setLooping(true);
         //设置控制UI显示时间
         holder.videoPlayer.setDismissControlTime(1500);
-
+        //关闭log
+        IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
 
 
     }

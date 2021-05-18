@@ -112,11 +112,16 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                Intent intent;
                 switch (menuItem.getItemId()){
                     case R.id.jilu:
-                        Intent intent = new Intent(MainActivity.this,RecordActivity.class);
+                        intent = new Intent(MainActivity.this,RecordActivity.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.mian_to_record,R.anim.fix_close);
+                        break;
+                    case R.id.guanzhu:
+                        intent = new Intent(MainActivity.this, LikeActivity.class);
+                        startActivity(intent);
                         break;
                     default:
                         Toast.makeText(MainActivity.this,"正在完善嗷~",Toast.LENGTH_SHORT).show();
@@ -159,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     private void initData(){
         dbHelper = new RecordDatabaseHelper(MainActivity.this,"Record.db",null,1);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-//        db.delete("RecordItem",null,null);    //清楚记录
+        db.delete("RecordItem",null,null);    //清楚记录
         Cursor cursor = db.query("RecordItem",null,null,null,null,null,null);
         while(cursor.moveToNext()){
             String imageUrl = cursor.getString(cursor.getColumnIndex("imageUrl"));
@@ -171,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
             String videoDescription = cursor.getString(cursor.getColumnIndex("videoDescription"));
             String authorDescription = cursor.getString(cursor.getColumnIndex("authorDescription"));
             String backgroundUrl = cursor.getString(cursor.getColumnIndex("backgroundUrl"));
-            VideoItem videoItem = new VideoItem(imageUrl,headIconUrl,title,authorName,tag,playUrl,videoDescription,authorDescription,backgroundUrl);
+            // VideoItem修改bug
+//            VideoItem videoItem = new VideoItem(imageUrl,headIconUrl,title,authorName,tag,playUrl,videoDescription,authorDescription,backgroundUrl);
+            VideoItem videoItem = new VideoItem(-1,imageUrl,headIconUrl,title,authorName,tag,playUrl,videoDescription,authorDescription,backgroundUrl,-1,-1);
             Value.videoItemList_record.add(videoItem);
             if(RecordActivity.isRecordListNull){
                 RecordActivity.isRecordListNull = false;

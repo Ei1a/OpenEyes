@@ -175,6 +175,7 @@ public class Utils {
                 String data = null;
                 String author = null;
                 String cover = null;
+                String consumption = null;
                 JSONArray jsonArray = new JSONArray("[" + jsonData + "]");
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 itemList = jsonObject.getString("itemList");
@@ -258,11 +259,15 @@ public class Utils {
                             String video_author_description = null;
                             String video_cover_feed_url = null;
                             String video_cover_blurred_url = null;
+                            int video_like_counts = -1;
+                            int video_share_counts = -1;
+                            int video_id = jsonObject_data.getInt("id");
                             String video_title = jsonObject_data.getString("title");
                             String video_description = jsonObject_data.getString("description");
                             String video_tag = jsonObject_data.getString("category");
                             author = jsonObject_data.getString("author");
                             cover = jsonObject_data.getString("cover");
+                            consumption = jsonObject_data.getString("consumption");
                             String video_play_url = jsonObject_data.getString("playUrl");
                             /*
                             进入author
@@ -284,11 +289,19 @@ public class Utils {
                                 video_cover_blurred_url = jsonObject_data_cover.getString("blurred");
                             }
                             /*
+                             * 进入consumption
+                             */
+                            JSONObject jsonObject_data_consumption = new JSONObject(consumption);
+                            video_like_counts = jsonObject_data_consumption.getInt("collectionCount");
+                            video_share_counts = jsonObject_data_consumption.getInt("shareCount");
+
+                            /*
                             加入VideoItem
                             */
-                            VideoItem videoItem = new VideoItem(video_cover_feed_url,video_author_head_icon,
+                            VideoItem videoItem = new VideoItem(video_id,video_cover_feed_url,video_author_head_icon,
                                     video_title,video_author_name,video_tag,video_play_url,video_description,
-                                    video_author_description,video_cover_blurred_url);
+                                    video_author_description,video_cover_blurred_url,video_like_counts
+                                    ,video_share_counts);
                             if(parseCode == Value.PAGE_MAIN){
                                 Value.videoItemList.add(videoItem);
                                 Log.d(TAG, "parseJson: videoItemList add");

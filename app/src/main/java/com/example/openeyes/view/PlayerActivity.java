@@ -9,20 +9,29 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.arialyy.annotations.Download;
+import com.arialyy.aria.core.Aria;
+import com.arialyy.aria.core.task.DownloadTask;
 import com.bumptech.glide.Glide;
 import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.R;
+import com.example.openeyes.model.LikeVideoDao;
+import com.example.openeyes.model.VideoDatabase;
 import com.example.openeyes.util.Value;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class PlayerActivity extends AppCompatActivity {
     public static VideoItem videoItem;
@@ -43,13 +52,29 @@ public class PlayerActivity extends AppCompatActivity {
     private TextView textDownload;
     private TextView textLike;
 
+    private LikeVideoDao dao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+
+        initData();
+        initView();
+        initListener();
+    }
+
+    /*
+     * 初始化View
+     */
+    private void initView(){
         //隐藏状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        //注册Aria
+        Aria.download(PlayerActivity.this).register();
+        /*
+         * 得到View引用
+         */
         videoPlayer = (StandardGSYVideoPlayer) findViewById(R.id.gsy_video_player);
         videoTitle = (TextView)findViewById(R.id.video_title_player);
         videoTag = (TextView)findViewById(R.id.video_tag_player);
@@ -64,18 +89,30 @@ public class PlayerActivity extends AppCompatActivity {
         imageLike = (ImageView) findViewById(R.id.image_like);
         textDownload = (TextView) findViewById(R.id.text_download);
         textLike = (TextView) findViewById(R.id.text_like);
-
+        //初始化GSYVideoPlayer
         initPlayerByVideoItem();
-        if(isNormalOrDB){
-            updateRecord();
+
+        /*
+         * View赋值
+         */
+        Glide.with(PlayerActivity.this).load(videoItem.getBackgroundUrl()).into(videoBackground);
+        videoBackground.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+        videoTitle.setText(videoItem.getTitle());
+        videoTag.setText(videoItem.getTag());
+        videoDescription.setText(videoItem.getVideoDescription());
+        Glide.with(PlayerActivity.this).load(videoItem.getHeadIconUrl()).into(authorHeadIcon);
+        authorName.setText(videoItem.getAuthorName());
+        authorDescription.setText(videoItem.getAuthorDescription());
+        if(dao.query(videoItem.getVideoId()) != null){
+            imageLike.setBackground(getDrawable(R.drawable.ic_like_already));
+            textLike.setText("已收藏");
         }
     }
 
-
+    /*
+     * 配置GSYVideoPlayer
+     */
     private void initPlayerByVideoItem() {
-        /*
-        配置GSYVideoPlayer
-         */
         videoPlayer.setUp(videoItem.getPlayUrl(),true,null);
         //设置Title
         videoPlayer.getTitleTextView().setVisibility(View.GONE);
@@ -109,16 +146,26 @@ public class PlayerActivity extends AppCompatActivity {
         videoPlayer.setDismissControlTime(1500);
         //播放
         videoPlayer.getStartButton().performClick();
+        //关闭log
+        IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
 
-        Glide.with(PlayerActivity.this).load(videoItem.getBackgroundUrl()).into(videoBackground);
-        videoBackground.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-        videoTitle.setText(videoItem.getTitle());
-        videoTag.setText(videoItem.getTag());
-        videoDescription.setText(videoItem.getVideoDescription());
-        Glide.with(PlayerActivity.this).load(videoItem.getHeadIconUrl()).into(authorHeadIcon);
-        authorName.setText(videoItem.getAuthorName());
-        authorDescription.setText(videoItem.getAuthorDescription());
+    }
 
+    /*
+     * 初始化数据
+     */
+    private void initData(){
+        if(isNormalOrDB){
+            updateRecord();
+        }
+        //初始化dao
+        dao = VideoDatabase.getInstance(getApplicationContext()).getLikeVideoDao();
+    }
+
+    /*
+     * 初始化监听器
+     */
+    private void initListener(){
         /*
          * 点击监听
          */
@@ -126,9 +173,14 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(textDownload.getText().equals("下载")){
-                    imageDownload.setBackground(getDrawable(R.drawable.ic_download_already));
-                    textDownload.setText("已下载");
-                    textDownload.setTextColor(getResources().getColor(R.color.colorButtonDown));
+                    //开始下载任务
+                    String fileName = videoItem.getTitle() + ".mp4";
+                    String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
+                    String path = directory + "/" + fileName;
+                    Aria.download(PlayerActivity.this)
+                            .load(videoItem.getPlayUrl())
+                            .setFilePath(path)
+                            .create();
                 }
             }
         });
@@ -136,17 +188,29 @@ public class PlayerActivity extends AppCompatActivity {
         constraintLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
+                 * 收藏视频
+                 */
                 if(textLike.getText().equals("收藏")){
+                    //未收藏才能收藏
+                    //设置收藏时间
+                    videoItem.setTime(System.currentTimeMillis());
+                    dao.insertAll(videoItem);
                     imageLike.setBackground(getDrawable(R.drawable.ic_like_already));
                     textLike.setText("已收藏");
                 }else{
+                    dao.delete(videoItem);
                     imageLike.setBackground(getDrawable(R.drawable.ic_like_bold));
                     textLike.setText("收藏");
                 }
+
             }
         });
     }
 
+    /*
+     * 更新观看记录
+     */
     private void updateRecord() {
         SQLiteDatabase db = MainActivity.dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -164,6 +228,26 @@ public class PlayerActivity extends AppCompatActivity {
         if(RecordActivity.isRecordListNull){
             RecordActivity.isRecordListNull = false;
         }
+    }
+
+    /*
+     * 监听任务下载状态
+     */
+    @Download.onTaskRunning protected void downloadRunning(DownloadTask task){
+        //显示任务百分比
+        int percent = task.getPercent();
+        Log.d("downloadPercentDebug", "percent: " + percent);
+        textDownload.setText(percent + "%");
+    }
+
+    /*
+     * 监听任务下载完毕
+     */
+    @Download.onTaskComplete void downloadComplete(DownloadTask task){
+        //更新按钮状态
+        imageDownload.setBackground(getDrawable(R.drawable.ic_download_already));
+        textDownload.setText("已下载");
+        textDownload.setTextColor(getResources().getColor(R.color.colorButtonDown));
     }
 
     @Override

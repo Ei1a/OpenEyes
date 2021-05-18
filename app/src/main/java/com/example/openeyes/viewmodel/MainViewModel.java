@@ -161,6 +161,7 @@ public class MainViewModel extends ViewModel {
                 String data = null;
                 String author = null;
                 String cover = null;
+                String consumption = null;
                 JSONArray jsonArray = new JSONArray("[" + jsonData + "]");
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 itemList = jsonObject.getString("itemList");
@@ -244,15 +245,19 @@ public class MainViewModel extends ViewModel {
                             String video_author_description = null;
                             String video_cover_feed_url = null;
                             String video_cover_blurred_url = null;
+                            int video_like_counts = -1;
+                            int video_share_counts = -1;
+                            int video_id = jsonObject_data.getInt("id");
                             String video_title = jsonObject_data.getString("title");
                             String video_description = jsonObject_data.getString("description");
                             String video_tag = jsonObject_data.getString("category");
                             author = jsonObject_data.getString("author");
                             cover = jsonObject_data.getString("cover");
+                            consumption = jsonObject_data.getString("consumption");
                             String video_play_url = jsonObject_data.getString("playUrl");
                             /*
-                            进入author
-                            */
+                             * 进入author
+                             */
                             if(!author.equals("null")){
                                 JSONArray authorArray = new JSONArray("[" + author + "]");
                                 for(int k=0;k<authorArray.length();k++){
@@ -263,8 +268,8 @@ public class MainViewModel extends ViewModel {
                                 }
                             }
                             /*
-                            进入cover
-                            */
+                             * 进入cover
+                             */
                             JSONArray coverArray = new JSONArray("[" + cover + "]");
                             for(int k=0;k<coverArray.length();k++){
                                 JSONObject jsonObject_data_cover = coverArray.getJSONObject(k);
@@ -272,11 +277,18 @@ public class MainViewModel extends ViewModel {
                                 video_cover_blurred_url = jsonObject_data_cover.getString("blurred");
                             }
                             /*
+                             * 进入consumption
+                             */
+                            JSONObject jsonObject_data_consumption = new JSONObject(consumption);
+                            video_like_counts = jsonObject_data_consumption.getInt("collectionCount");
+                            video_share_counts = jsonObject_data_consumption.getInt("shareCount");
+                            /*
                              * 加入VideoItem
                              */
-                            VideoItem videoItem = new VideoItem(video_cover_feed_url,video_author_head_icon,
+                            VideoItem videoItem = new VideoItem(video_id,video_cover_feed_url,video_author_head_icon,
                                     video_title,video_author_name,video_tag,video_play_url,video_description,
-                                    video_author_description,video_cover_blurred_url);
+                                    video_author_description,video_cover_blurred_url,video_like_counts
+                                    ,video_share_counts);
                             /*
                              * 放入list
                              */
