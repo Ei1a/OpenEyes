@@ -12,19 +12,19 @@ import java.util.List;
 @Dao
 public interface LikeVideoDao {
 
-    @Query("SELECT * FROM video_items ORDER BY time DESC")
-    List<VideoItem> getAll();
+    @Query("SELECT * FROM video_items WHERE user_count IS :count AND operation = 1 ORDER BY time DESC")
+    List<VideoItem> getAll(String count);
 
-    @Query("SELECT * FROM video_items WHERE video_id IS :videoId")
-    VideoItem query(int videoId);
+    @Query("SELECT * FROM video_items WHERE video_id IS :videoId AND user_count IS :count AND operation = 1")
+    VideoItem queryStatus(int videoId, String count);
 
     @Insert
-    void insertAll(VideoItem... items);
+    void insert(VideoItem... items);
 
     @Insert
     void insertList(List<VideoItem> items);
 
-    @Delete
-    void delete(VideoItem item);
+    @Query("DELETE FROM video_items WHERE video_id = :videoId AND user_count IS :count")
+    void delete(int videoId, String count);
 
 }

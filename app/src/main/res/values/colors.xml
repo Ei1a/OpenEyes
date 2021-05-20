@@ -10,6 +10,7 @@
     <color name="backIconBlack">#8A8A8A</color>
     <color name="backIconWhite">#FFFFFF</color>
     <color name="colorButtonDown">#ABABAB</color>
+    <color name="colorOptionsButton">#1874BD</color>
 
     <!--前景色-->
     <color name="easy_photos_fg_primary">#8A8A8A</color>

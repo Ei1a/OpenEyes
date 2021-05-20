@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.example.openeyes.R;
+import com.example.openeyes.bean.PersonalCount;
+import com.example.openeyes.bean.RegisterEvent;
+import com.example.openeyes.model.PersonalCountDao;
+import com.example.openeyes.model.VideoDatabase;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class FragmentRegister extends Fragment {
 
@@ -25,11 +32,14 @@ public class FragmentRegister extends Fragment {
     private TextView buttonSignUp;
     private ConstraintLayout constraintLayout;
 
+    private PersonalCountDao dao;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         initView(view);
+        intData();
         initListener();
         return view;
     }
@@ -46,6 +56,13 @@ public class FragmentRegister extends Fragment {
         editTextConfirmPassword = (EditText) root.findViewById(R.id.edit_confirm_password_sign_up);
         buttonSignUp = (TextView) root.findViewById(R.id.button_sign_up);
         constraintLayout = (ConstraintLayout) root.findViewById(R.id.constraint_layout_sign_up);
+    }
+
+    /*
+     * 初始化数据
+     */
+    private void intData(){
+        dao = VideoDatabase.getInstance(getActivity().getApplicationContext()).getPersonalCountDao();
     }
 
     /*
@@ -81,5 +98,44 @@ public class FragmentRegister extends Fragment {
         editTextCount.setOnFocusChangeListener(listener);
         editTextPassword.setOnFocusChangeListener(listener);
         editTextConfirmPassword.setOnFocusChangeListener(listener);
+
+        /*
+         * 监听注册按钮
+         */
+        buttonSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String count = editTextCount.getText().toString();
+                String password = editTextPassword.getText().toString();
+                String passwordConfirm = editTextConfirmPassword.getText().toString();
+
+                if(count.equals("")){
+                    //未输入账号
+                    Toast.makeText(getContext(), "请输入账号", Toast.LENGTH_SHORT).show();
+                }else if(password.equals("")){
+                    //未输入密码
+                    Toast.makeText(getContext(), "请输入密码", Toast.LENGTH_SHORT).show();
+                }else if(passwordConfirm.equals("")){
+                    //未确认密码
+                    Toast.makeText(getContext(), "请确认密码", Toast.LENGTH_SHORT).show();
+                }else{
+                    //输入完整, 检测两次密码输入是否一致
+                    if(password.equals(passwordConfirm)){
+                        //一致，判断账号是否以注册过
+                        if(dao.queryCount(count) == null){
+                            //未注册，导入数据库
+                            dao.insert(new PersonalCount(count, password, 0));
+                            EventBus.getDefault().post(new RegisterEvent(count, password));
+                        }else{
+                            //已注册
+                            Toast.makeText(getContext(), "账号已注册", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        //不一致
+                        Toast.makeText(getContext(), "两次密码输入不一致", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 }

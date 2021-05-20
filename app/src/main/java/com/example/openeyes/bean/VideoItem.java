@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "video_items")
 public class VideoItem {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     @ColumnInfo(name = "video_id")
     private int videoId;
 
@@ -46,6 +48,16 @@ public class VideoItem {
     @ColumnInfo(name = "time")
     private long time;
 
+    @ColumnInfo(name = "user_count")
+    private String userCount;
+
+    /*
+     * 0 = 历史记录
+     * 1 = 收藏
+     */
+    @ColumnInfo(name = "operation")
+    private int operation;
+
     public VideoItem(int videoId, String imageUrl, String headIconUrl, String title, String authorName, String tag, String playUrl, String videoDescription, String authorDescription, String backgroundUrl, int likeCounts, int shareCounts){
         this.videoId = videoId;
         this.imageUrl = imageUrl;
@@ -59,6 +71,10 @@ public class VideoItem {
         this.backgroundUrl = backgroundUrl;
         this.likeCounts = likeCounts;
         this.shareCounts = shareCounts;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getVideoId() {
@@ -113,7 +129,27 @@ public class VideoItem {
         return time;
     }
 
+    public String getUserCount() {
+        return userCount;
+    }
+
+    public int getOperation() {
+        return operation;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public void setUserCount(String userCount) {
+        this.userCount = userCount;
+    }
+
+    public void setOperation(int operation) {
+        this.operation = operation;
     }
 }

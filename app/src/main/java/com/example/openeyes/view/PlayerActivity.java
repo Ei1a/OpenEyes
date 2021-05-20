@@ -23,6 +23,8 @@ import com.bumptech.glide.Glide;
 import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.R;
 import com.example.openeyes.model.LikeVideoDao;
+import com.example.openeyes.model.PersonalCountDao;
+import com.example.openeyes.model.RecordVideoDao;
 import com.example.openeyes.model.VideoDatabase;
 import com.example.openeyes.util.Value;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -53,12 +55,16 @@ public class PlayerActivity extends AppCompatActivity {
     private TextView textLike;
 
     private LikeVideoDao dao;
+    private RecordVideoDao recordVideoDao;
+    private PersonalCountDao countDao;
+    private String count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
+        RecordActivity.isRecordListNull = false;
         initData();
         initView();
         initListener();
@@ -103,7 +109,7 @@ public class PlayerActivity extends AppCompatActivity {
         Glide.with(PlayerActivity.this).load(videoItem.getHeadIconUrl()).into(authorHeadIcon);
         authorName.setText(videoItem.getAuthorName());
         authorDescription.setText(videoItem.getAuthorDescription());
-        if(dao.query(videoItem.getVideoId()) != null){
+        if(dao.queryStatus(videoItem.getVideoId(), count) != null){
             imageLike.setBackground(getDrawable(R.drawable.ic_like_already));
             textLike.setText("已收藏");
         }
@@ -155,11 +161,16 @@ public class PlayerActivity extends AppCompatActivity {
      * 初始化数据
      */
     private void initData(){
+
+        //初始化dao
+        dao = VideoDatabase.getInstance(getApplicationContext()).getLikeVideoDao();
+        recordVideoDao = VideoDatabase.getInstance(getApplicationContext()).getRecordVideoDao();
+        //得到已登录的账号
+        countDao = VideoDatabase.getInstance(getApplicationContext()).getPersonalCountDao();
+        count = countDao.queryRecentlyLogin();
         if(isNormalOrDB){
             updateRecord();
         }
-        //初始化dao
-        dao = VideoDatabase.getInstance(getApplicationContext()).getLikeVideoDao();
     }
 
     /*
@@ -195,11 +206,15 @@ public class PlayerActivity extends AppCompatActivity {
                     //未收藏才能收藏
                     //设置收藏时间
                     videoItem.setTime(System.currentTimeMillis());
-                    dao.insertAll(videoItem);
+                    //设置收藏的用户帐号
+                    videoItem.setUserCount(count);
+                    //设置操作类型
+                    videoItem.setOperation(1);
+                    dao.insert(videoItem);
                     imageLike.setBackground(getDrawable(R.drawable.ic_like_already));
                     textLike.setText("已收藏");
                 }else{
-                    dao.delete(videoItem);
+                    dao.delete(videoItem.getVideoId(), count);
                     imageLike.setBackground(getDrawable(R.drawable.ic_like_bold));
                     textLike.setText("收藏");
                 }
@@ -212,22 +227,26 @@ public class PlayerActivity extends AppCompatActivity {
      * 更新观看记录
      */
     private void updateRecord() {
-        SQLiteDatabase db = MainActivity.dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("imageUrl",videoItem.getImageUrl());
-        values.put("headIconUrl",videoItem.getHeadIconUrl());
-        values.put("title",videoItem.getTitle());
-        values.put("authorName",videoItem.getAuthorName());
-        values.put("tag",videoItem.getTag());
-        values.put("playUrl",videoItem.getPlayUrl());
-        values.put("videoDescription",videoItem.getVideoDescription());
-        values.put("authorDescription",videoItem.getAuthorDescription());
-        values.put("backgroundUrl",videoItem.getBackgroundUrl());
-        db.insert("RecordItem",null,values);
-        Value.videoItemList_record.add(videoItem);
-        if(RecordActivity.isRecordListNull){
-            RecordActivity.isRecordListNull = false;
-        }
+//        SQLiteDatabase db = MainActivity.dbHelper.getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//        values.put("imageUrl",videoItem.getImageUrl());
+//        values.put("headIconUrl",videoItem.getHeadIconUrl());
+//        values.put("title",videoItem.getTitle());
+//        values.put("authorName",videoItem.getAuthorName());
+//        values.put("tag",videoItem.getTag());
+//        values.put("playUrl",videoItem.getPlayUrl());
+//        values.put("videoDescription",videoItem.getVideoDescription());
+//        values.put("authorDescription",videoItem.getAuthorDescription());
+//        values.put("backgroundUrl",videoItem.getBackgroundUrl());
+//        db.insert("RecordItem",null,values);
+//        Value.videoItemList_record.add(videoItem);
+//        if(RecordActivity.isRecordListNull){
+//            RecordActivity.isRecordListNull = false;
+//        }
+        videoItem.setTime(System.currentTimeMillis());
+        videoItem.setUserCount(count);
+        videoItem.setOperation(0);
+        recordVideoDao.insert(videoItem);
     }
 
     /*

@@ -4,17 +4,17 @@
 
     <item
         android:id="@+id/jilu"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/ic_record_1"
         android:title="观看记录"/>
 
     <item
         android:id="@+id/guanzhu"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="我的关注"/>
+        android:icon="@drawable/ic_like_menu"
+        android:title="我的收藏"/>
 
     <item
         android:id="@+id/shadiao"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="每日沙雕"/>
+        android:icon="@drawable/ic_about"
+        android:title="作者信息"/>
 
 </menu>

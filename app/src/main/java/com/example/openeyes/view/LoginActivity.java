@@ -17,8 +17,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.openeyes.R;
 import com.example.openeyes.adapter.FragmentAdapter;
+import com.example.openeyes.bean.RegisterEvent;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        //注册EventBus
+        EventBus.getDefault().register(this);
         //设置状态栏透明
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
@@ -106,6 +113,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRegisterEvent(RegisterEvent event){
+        //跳转到登陆tab
+        tabLayout.setCurrentTab(0);
+
+    }
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         //若为Enter键，剥夺焦点
@@ -113,5 +127,11 @@ public class LoginActivity extends AppCompatActivity {
             root.requestFocus();
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -16,6 +16,7 @@ import com.example.openeyes.R;
 import com.example.openeyes.adapter.LikeAdapter;
 import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.model.LikeVideoDao;
+import com.example.openeyes.model.PersonalCountDao;
 import com.example.openeyes.model.VideoDatabase;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class LikeActivity extends AppCompatActivity {
 
-    private List<VideoItem> videoItemList;
+    private List<VideoItem> videoItemList = new ArrayList<>();
     private LikeVideoDao dao;
 
     @Override
@@ -62,7 +63,10 @@ public class LikeActivity extends AppCompatActivity {
 
     private void initData(){
         dao = VideoDatabase.getInstance(getApplicationContext()).getLikeVideoDao();
-        videoItemList = dao.getAll();
+        String count = getIntent().getStringExtra("count");
+        if(count != null){
+            videoItemList = dao.getAll(count);
+        }
     }
 
     @Override

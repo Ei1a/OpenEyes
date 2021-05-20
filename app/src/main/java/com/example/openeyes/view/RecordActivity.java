@@ -34,6 +34,7 @@ public class RecordActivity extends AppCompatActivity {
 
         if(!isRecordListNull){
             FragmentRecord fragmentRecord = new FragmentRecord();
+            fragmentRecord.count = getIntent().getStringExtra("count");
             textTips.setVisibility(View.GONE);
             replaceFragment(fragmentRecord);
         }

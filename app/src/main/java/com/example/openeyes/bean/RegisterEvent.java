@@ -1,18 +1,13 @@
 package com.example.openeyes.bean;
 
-public class LoginEvent {
-    private boolean isSignIn = false;
+public class RegisterEvent {
+
     private String count;
     private String password;
 
-    public LoginEvent(boolean isSignIn, String count, String password){
-        this.isSignIn = isSignIn;
+    public RegisterEvent(String count, String password) {
         this.count = count;
         this.password = password;
-    }
-
-    public boolean getStatus(){
-        return isSignIn;
     }
 
     public String getCount() {
