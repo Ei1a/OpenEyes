@@ -36,6 +36,9 @@ public class LikeActivity extends AppCompatActivity {
         initView();
     }
 
+    /*
+     * 初始化View
+     */
     private void initView(){
         //设置状态栏为黑色
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -61,6 +64,9 @@ public class LikeActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * 初始化数据
+     */
     private void initData(){
         dao = VideoDatabase.getInstance(getApplicationContext()).getLikeVideoDao();
         String count = getIntent().getStringExtra("count");
@@ -77,5 +83,11 @@ public class LikeActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.record_main_enter, R.anim.record_to_main);
     }
 }

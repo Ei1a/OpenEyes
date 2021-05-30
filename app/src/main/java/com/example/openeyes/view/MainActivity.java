@@ -1,24 +1,17 @@
 package com.example.openeyes.view;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
 import com.example.openeyes.bean.LoginEvent;
 import com.example.openeyes.bean.PersonalInformation;
-import com.example.openeyes.bean.SortItem;
-import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.R;
 import com.example.openeyes.model.PersonalCountDao;
 import com.example.openeyes.model.PersonalInformationDao;
 import com.example.openeyes.model.RecordVideoDao;
 import com.example.openeyes.model.VideoDatabase;
-import com.example.openeyes.util.RecordDatabaseHelper;
-import com.example.openeyes.util.Utils;
 import com.example.openeyes.util.Value;
-import com.example.openeyes.viewmodel.MainViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -31,10 +24,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,16 +35,11 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     /*
@@ -81,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     private Fragment fragment_3;
     private Fragment preFragment;
 
-    public static RecordDatabaseHelper dbHelper;
     public static boolean isMainOrSearch = true;
     public List<Fragment> fragmentList_rank = new ArrayList<>();
 
@@ -133,15 +117,31 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent;
                 switch (menuItem.getItemId()){
                     case R.id.jilu:
-                        intent = new Intent(MainActivity.this,RecordActivity.class);
-                        intent.putExtra("count", count);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.mian_to_record,R.anim.fix_close);
+                        if(count == null){
+                            //未登录状态，则跳转登陆界面
+                            intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.main_to_login, R.anim.fix_close);
+                        }else{
+                            intent = new Intent(MainActivity.this, RecordFixActivity.class);
+                            intent.putExtra("count", count);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.mian_to_record,R.anim.record_main_exit);
+                        }
+
                         break;
                     case R.id.guanzhu:
-                        intent = new Intent(MainActivity.this, LikeActivity.class);
-                        intent.putExtra("count", count);
-                        startActivity(intent);
+                        if(count == null){
+                            //未登录状态，则跳转登陆界面
+                            intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.main_to_login, R.anim.fix_close);
+                        }else{
+                            intent = new Intent(MainActivity.this, LikeActivity.class);
+                            intent.putExtra("count", count);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.mian_to_record,R.anim.record_main_exit);
+                        }
                         break;
                     default:
                         Toast.makeText(MainActivity.this,"正在完善嗷~",Toast.LENGTH_SHORT).show();
@@ -159,30 +159,7 @@ public class MainActivity extends AppCompatActivity {
      * 初始化数据
      */
     private void initData(){
-//        dbHelper = new RecordDatabaseHelper(MainActivity.this,"Record.db",null,1);
-//        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//        db.delete("RecordItem",null,null);    //清楚记录
-//        Cursor cursor = db.query("RecordItem",null,null,null,null,null,null);
-//        while(cursor.moveToNext()){
-//            String imageUrl = cursor.getString(cursor.getColumnIndex("imageUrl"));
-//            String headIconUrl = cursor.getString(cursor.getColumnIndex("headIconUrl"));
-//            String title = cursor.getString(cursor.getColumnIndex("title"));
-//            String authorName = cursor.getString(cursor.getColumnIndex("authorName"));
-//            String tag = cursor.getString(cursor.getColumnIndex("tag"));
-//            String playUrl = cursor.getString(cursor.getColumnIndex("playUrl"));
-//            String videoDescription = cursor.getString(cursor.getColumnIndex("videoDescription"));
-//            String authorDescription = cursor.getString(cursor.getColumnIndex("authorDescription"));
-//            String backgroundUrl = cursor.getString(cursor.getColumnIndex("backgroundUrl"));
-//            // VideoItem修改bug
-////            VideoItem videoItem = new VideoItem(imageUrl,headIconUrl,title,authorName,tag,playUrl,videoDescription,authorDescription,backgroundUrl);
-//            VideoItem videoItem = new VideoItem(-1,imageUrl,headIconUrl,title,authorName,tag,playUrl,videoDescription,authorDescription,backgroundUrl,-1,-1);
-//            Value.videoItemList_record.add(videoItem);
-//            if(RecordActivity.isRecordListNull){
-//                RecordActivity.isRecordListNull = false;
-//            }
-//        }
-//        cursor.close();
-
+        //初始化dao
         recordVideoDao = VideoDatabase.getInstance(getApplicationContext()).getRecordVideoDao();
         informationDao = VideoDatabase.getInstance(getApplicationContext()).getPersonalInformationDao();
         /*
@@ -215,11 +192,14 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, PersonImformationActivity.class);
                     intent.putExtra("count", count);
                     intent.putExtra("password", password);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.mian_to_record,R.anim.record_main_exit);
                 }else{
                     //未登录，跳转登陆界面
                     intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.main_to_login, R.anim.fix_close);
                 }
-                startActivity(intent);
             }
         });
     }
@@ -330,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Glide.with(MainActivity.this).load(getDrawable(R.drawable.icon_head)).into(headIconImage);
+            userName.setText("");
         }
     }
 

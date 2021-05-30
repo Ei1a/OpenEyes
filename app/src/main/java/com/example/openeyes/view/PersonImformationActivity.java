@@ -361,4 +361,10 @@ public class PersonImformationActivity extends AppCompatActivity {
         }
         return super.dispatchKeyEvent(event);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.record_main_enter, R.anim.record_to_main);
+    }
 }

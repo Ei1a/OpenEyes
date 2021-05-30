@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.view.PlayerActivity;
 import com.example.openeyes.R;
-import com.example.openeyes.view.RecordActivity;
+import com.example.openeyes.view.RecordFixActivity;
 
 import java.util.List;
 
@@ -42,13 +42,13 @@ public class VideoAdapterRecord extends RecyclerView.Adapter<VideoAdapterRecord.
                 int position = holder.getAdapterPosition();
                 VideoItem videoItem = videoItemList.get(position);
                 Intent intent = new Intent(mContext, PlayerActivity.class);
-                PlayerActivity.videoItem = videoItem;
-                PlayerActivity.isNormalOrDB = false;
+                intent.putExtra("item", videoItem);
+                intent.putExtra("isNormal", false);
                 mContext.startActivity(intent);
                  /*
                     转换后才能使用overridePendingTransition方法
                  */
-                RecordActivity activity = (RecordActivity) mContext;
+                RecordFixActivity activity = (RecordFixActivity) mContext;
                 activity.overridePendingTransition(R.anim.welcome_to_main,R.anim.fix_close);
             }
         });

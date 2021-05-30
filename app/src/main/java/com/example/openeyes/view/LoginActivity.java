@@ -134,4 +134,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fix_open, R.anim.login_to_main);
+    }
 }

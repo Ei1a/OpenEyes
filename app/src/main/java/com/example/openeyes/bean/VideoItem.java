@@ -4,8 +4,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "video_items")
-public class VideoItem {
+public class VideoItem implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -45,8 +47,11 @@ public class VideoItem {
     @ColumnInfo(name = "share_count")
     private int shareCounts;
 
-    @ColumnInfo(name = "time")
-    private long time;
+    @ColumnInfo(name = "like_time")
+    private long likeTime;
+
+    @ColumnInfo(name = "watch_time")
+    private long watchTime;
 
     @ColumnInfo(name = "user_count")
     private String userCount;
@@ -125,8 +130,12 @@ public class VideoItem {
         return shareCounts;
     }
 
-    public long getTime() {
-        return time;
+    public long getLikeTime() {
+        return likeTime;
+    }
+
+    public long getWatchTime() {
+        return watchTime;
     }
 
     public String getUserCount() {
@@ -141,8 +150,12 @@ public class VideoItem {
         this.id = id;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setLikeTime(long likeTime) {
+        this.likeTime = likeTime;
+    }
+
+    public void setWatchTime(long watchTime) {
+        this.watchTime = watchTime;
     }
 
     public void setUserCount(String userCount) {

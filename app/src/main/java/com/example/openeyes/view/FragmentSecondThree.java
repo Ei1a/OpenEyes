@@ -73,6 +73,7 @@ public class FragmentSecondThree extends Fragment {
             public void onChanged(List<VideoItem> videoItems) {
                 videoItemList.addAll(videoItems);
                 mRecyclerView.getAdapter().notifyDataSetChanged();
+//                Toast.makeText(getContext(), "加载好咯~", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -94,6 +95,7 @@ public class FragmentSecondThree extends Fragment {
                 if(newState==RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition==totalItemCount-1 &&visibleItemCount>0 ){
                     if(!mViewModel.next_historical_rank_page_url.equals("null")){
                         mViewModel.sendHttpRequest(mViewModel.next_historical_rank_page_url, mViewModel.PAGE_RANK_HISTORICAL);
+//                        Toast.makeText(getContext(), "正在努力加载...", Toast.LENGTH_SHORT).show();
                     }else {
                         Toast.makeText(getContext(),"没有更多数据了噢",Toast.LENGTH_SHORT).show();
                     }

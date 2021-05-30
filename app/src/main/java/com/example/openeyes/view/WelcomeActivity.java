@@ -55,14 +55,14 @@ public class WelcomeActivity extends AppCompatActivity {
                 imageTitleTextView.setVisibility(View.VISIBLE);
 
             }
-        },700);
+        },500);
         handler.postDelayed(new Runnable() {
             @Override
 
             public void run() {
                 Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.welcome_to_main,R.anim.fix_close);
+                overridePendingTransition(R.anim.welcome_to_main_enter, R.anim.welcome_to_main_exit);
                 finish();
             }
         },3000);

@@ -10,7 +10,7 @@ import com.example.openeyes.bean.PersonalCount;
 import com.example.openeyes.bean.PersonalInformation;
 import com.example.openeyes.bean.VideoItem;
 
-@Database(entities = {VideoItem.class, PersonalCount.class, PersonalInformation.class}, version = 7, exportSchema = false)
+@Database(entities = {VideoItem.class, PersonalCount.class, PersonalInformation.class}, version = 9, exportSchema = false)
 public abstract class VideoDatabase extends RoomDatabase {
     private static final String databaseName = "OpenEyesRoom.db";
     private static volatile VideoDatabase instance;

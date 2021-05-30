@@ -15,7 +15,8 @@
         android:roundIcon="@drawable/launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.LikeActivity"></activity>
+        <activity android:name=".view.RecordFixActivity"></activity>
+        <activity android:name=".view.LikeActivity" />
         <activity android:name=".view.LoginActivity" />
         <activity android:name=".view.PersonImformationActivity" />
         <activity
@@ -29,7 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.RecordActivity" />
         <activity
             android:name=".view.PlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"

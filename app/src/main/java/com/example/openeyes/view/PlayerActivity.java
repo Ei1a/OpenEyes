@@ -20,6 +20,7 @@ import com.arialyy.annotations.Download;
 import com.arialyy.aria.core.Aria;
 import com.arialyy.aria.core.task.DownloadTask;
 import com.bumptech.glide.Glide;
+import com.example.openeyes.bean.LoginEvent;
 import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.R;
 import com.example.openeyes.model.LikeVideoDao;
@@ -32,20 +33,18 @@ import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class PlayerActivity extends AppCompatActivity {
-    public static VideoItem videoItem;
-    public static boolean isNormalOrDB;
+    private VideoItem videoItem;
+    private boolean isNormal;
+
     private StandardGSYVideoPlayer videoPlayer;
-    private TextView videoTitle;
-    private TextView videoTag;
-    private TextView videoDescription;
-    private CircleImageView authorHeadIcon;
-    private TextView authorName;
-    private TextView authorDescription;
-    private ImageView videoBackground;
     private OrientationUtils orientationUtils;
     private ConstraintLayout constraintDownload;
     private ConstraintLayout constraintLike;
@@ -64,7 +63,6 @@ public class PlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
-        RecordActivity.isRecordListNull = false;
         initData();
         initView();
         initListener();
@@ -78,17 +76,18 @@ public class PlayerActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //注册Aria
         Aria.download(PlayerActivity.this).register();
+
         /*
          * 得到View引用
          */
         videoPlayer = (StandardGSYVideoPlayer) findViewById(R.id.gsy_video_player);
-        videoTitle = (TextView)findViewById(R.id.video_title_player);
-        videoTag = (TextView)findViewById(R.id.video_tag_player);
-        videoDescription = (TextView)findViewById(R.id.video_description_player);
-        authorHeadIcon = (CircleImageView)findViewById(R.id.head_icon_player);
-        authorName = (TextView)findViewById(R.id.video_author_name_player);
-        authorDescription = (TextView)findViewById(R.id.video_author_description);
-        videoBackground = (ImageView)findViewById(R.id.video_background_player);
+        TextView videoTitle = (TextView) findViewById(R.id.video_title_player);
+        TextView videoTag = (TextView) findViewById(R.id.video_tag_player);
+        TextView videoDescription = (TextView) findViewById(R.id.video_description_player);
+        CircleImageView authorHeadIcon = (CircleImageView) findViewById(R.id.head_icon_player);
+        TextView authorName = (TextView) findViewById(R.id.video_author_name_player);
+        TextView authorDescription = (TextView) findViewById(R.id.video_author_description);
+        ImageView videoBackground = (ImageView) findViewById(R.id.video_background_player);
         constraintDownload = (ConstraintLayout) findViewById(R.id.constraint_layout_download);
         constraintLike = (ConstraintLayout) findViewById(R.id.constraint_layout_like);
         imageDownload = (ImageView) findViewById(R.id.image_download);
@@ -161,16 +160,14 @@ public class PlayerActivity extends AppCompatActivity {
      * 初始化数据
      */
     private void initData(){
-
+        //初始化VideoItem
+        Intent intent = getIntent();
+        videoItem = (VideoItem) intent.getSerializableExtra("item");
+        isNormal = intent.getBooleanExtra("isNormal", false);
         //初始化dao
         dao = VideoDatabase.getInstance(getApplicationContext()).getLikeVideoDao();
         recordVideoDao = VideoDatabase.getInstance(getApplicationContext()).getRecordVideoDao();
-        //得到已登录的账号
         countDao = VideoDatabase.getInstance(getApplicationContext()).getPersonalCountDao();
-        count = countDao.queryRecentlyLogin();
-        if(isNormalOrDB){
-            updateRecord();
-        }
     }
 
     /*
@@ -178,7 +175,7 @@ public class PlayerActivity extends AppCompatActivity {
      */
     private void initListener(){
         /*
-         * 点击监听
+         * 监听下载按钮点击
          */
         constraintDownload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,29 +193,39 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
+        /*
+         * 监听收藏按钮点击
+         */
         constraintLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 /*
                  * 收藏视频
                  */
-                if(textLike.getText().equals("收藏")){
-                    //未收藏才能收藏
-                    //设置收藏时间
-                    videoItem.setTime(System.currentTimeMillis());
-                    //设置收藏的用户帐号
-                    videoItem.setUserCount(count);
-                    //设置操作类型
-                    videoItem.setOperation(1);
-                    dao.insert(videoItem);
-                    imageLike.setBackground(getDrawable(R.drawable.ic_like_already));
-                    textLike.setText("已收藏");
+                if(count == null){
+                    //未登录状态，则跳登陆界面
+                    Intent intent = new Intent(PlayerActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.main_to_login, R.anim.fix_close);
                 }else{
-                    dao.delete(videoItem.getVideoId(), count);
-                    imageLike.setBackground(getDrawable(R.drawable.ic_like_bold));
-                    textLike.setText("收藏");
+                    //登陆状态，才能收藏
+                    if(textLike.getText().equals("收藏")){
+                        //未收藏才能收藏
+                        //设置收藏时间
+                        videoItem.setLikeTime(System.currentTimeMillis());
+                        //设置收藏的用户帐号
+                        videoItem.setUserCount(count);
+                        //设置操作类型
+                        videoItem.setOperation(1);
+                        dao.insert(videoItem);
+                        imageLike.setBackground(getDrawable(R.drawable.ic_like_already));
+                        textLike.setText("已收藏");
+                    }else{
+                        dao.delete(videoItem.getVideoId(), count);
+                        imageLike.setBackground(getDrawable(R.drawable.ic_like_bold));
+                        textLike.setText("收藏");
+                    }
                 }
-
             }
         });
     }
@@ -227,24 +234,11 @@ public class PlayerActivity extends AppCompatActivity {
      * 更新观看记录
      */
     private void updateRecord() {
-//        SQLiteDatabase db = MainActivity.dbHelper.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//        values.put("imageUrl",videoItem.getImageUrl());
-//        values.put("headIconUrl",videoItem.getHeadIconUrl());
-//        values.put("title",videoItem.getTitle());
-//        values.put("authorName",videoItem.getAuthorName());
-//        values.put("tag",videoItem.getTag());
-//        values.put("playUrl",videoItem.getPlayUrl());
-//        values.put("videoDescription",videoItem.getVideoDescription());
-//        values.put("authorDescription",videoItem.getAuthorDescription());
-//        values.put("backgroundUrl",videoItem.getBackgroundUrl());
-//        db.insert("RecordItem",null,values);
-//        Value.videoItemList_record.add(videoItem);
-//        if(RecordActivity.isRecordListNull){
-//            RecordActivity.isRecordListNull = false;
-//        }
-        videoItem.setTime(System.currentTimeMillis());
+        //设置观看时间
+        videoItem.setWatchTime(System.currentTimeMillis());
+        //设置观看的用户账号
         videoItem.setUserCount(count);
+        //设置操作类型
         videoItem.setOperation(0);
         recordVideoDao.insert(videoItem);
     }
@@ -285,6 +279,12 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         videoPlayer.onVideoResume();
+        //得到已登录的账号
+        count = countDao.queryRecentlyLogin();
+        //更新观看记录
+        if(isNormal && count!=null){
+            updateRecord();
+        }
     }
 
     @Override

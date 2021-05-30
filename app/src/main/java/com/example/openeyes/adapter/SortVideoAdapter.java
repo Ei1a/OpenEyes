@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.openeyes.bean.VideoItem;
 import com.example.openeyes.view.PlayerActivity;
 import com.example.openeyes.R;
+import com.example.openeyes.view.SortActivity;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
@@ -59,9 +60,10 @@ public class SortVideoAdapter extends RecyclerView.Adapter<SortVideoAdapter.View
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, PlayerActivity.class);
-                PlayerActivity.videoItem = videoItem;
-                PlayerActivity.isNormalOrDB = true;
+                intent.putExtra("item", videoItem);
+                intent.putExtra("isNormal", true);
                 mContext.startActivity(intent);
+                ((SortActivity)mContext).overridePendingTransition(R.anim.welcome_to_main,R.anim.fix_close);
             }
         });
 

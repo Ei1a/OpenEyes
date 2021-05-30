@@ -12,7 +12,7 @@ import java.util.List;
 @Dao
 public interface LikeVideoDao {
 
-    @Query("SELECT * FROM video_items WHERE user_count IS :count AND operation = 1 ORDER BY time DESC")
+    @Query("SELECT * FROM video_items WHERE user_count IS :count AND operation = 1 ORDER BY like_time DESC")
     List<VideoItem> getAll(String count);
 
     @Query("SELECT * FROM video_items WHERE video_id IS :videoId AND user_count IS :count AND operation = 1")
@@ -24,7 +24,7 @@ public interface LikeVideoDao {
     @Insert
     void insertList(List<VideoItem> items);
 
-    @Query("DELETE FROM video_items WHERE video_id = :videoId AND user_count IS :count")
+    @Query("DELETE FROM video_items WHERE video_id = :videoId AND user_count IS :count AND operation = 1")
     void delete(int videoId, String count);
 
 }

@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.openeyes.adapter.SortVideoAdapter;
@@ -163,9 +164,11 @@ public class SortActivity extends AppCompatActivity {
                 int visibleItemCount = recyclerView.getChildCount();
                 int totalItemCount = recyclerView.getAdapter().getItemCount();
                 if(newState==RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem==totalItemCount-1 && visibleItemCount>0){
-                    if(Value.next_sort_page_url != null){
-                        Utils utils = new Utils();
-                        utils.adapterUpdateNotify(mContext,recyclerView_sort_video,Value.PAGE_SORT_ITEM_VIDEO,Value.next_sort_page_url);
+                    if(!mViewModel.next_sort_page_url.equals("null")){
+                        mViewModel.sendHttpRequest(mViewModel.next_sort_page_url, mViewModel.PAGE_SORT_ITEM_VIDEO);
+//                        Toast.makeText(SortActivity.this, "正在努力加载...", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(SortActivity.this,"没有更多数据了噢",Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -251,6 +254,7 @@ public class SortActivity extends AppCompatActivity {
         mViewModel.requestSortItemResult.observe(this, videoItems -> {
             videoItemList.addAll(videoItems);
             recyclerView_sort_video.getAdapter().notifyDataSetChanged();
+//            Toast.makeText(SortActivity.this, "加载好咯~", Toast.LENGTH_SHORT).show();
         });
     }
 

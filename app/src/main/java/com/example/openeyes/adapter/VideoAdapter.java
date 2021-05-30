@@ -44,8 +44,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                 int position = holder.getAdapterPosition();
                 VideoItem videoItem = videoItemList.get(position);
                 Intent intent = new Intent(mContext, PlayerActivity.class);
-                PlayerActivity.videoItem = videoItem;
-                PlayerActivity.isNormalOrDB = true;
+                intent.putExtra("item", videoItem);
+                intent.putExtra("isNormal", true);
                 mContext.startActivity(intent);
                 /*
                     转换后才能使用overridePendingTransition方法

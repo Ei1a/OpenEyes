@@ -62,7 +62,6 @@ public class SearchActivity extends AppCompatActivity {
                 KEYWORD = query;
                 String KEYWORD_URL="http://baobab.kaiyanapp.com/api/v1/search?num=10&query=" + KEYWORD + "&start=10";
                 Value.videoItemList_search.clear();  //避免叠加之前搜素的数据
-//                MainActivity.parseJson_code = MainActivity.PAGE_SEARCH;
                 Log.d("mDebug", KEYWORD_URL);
                 Utils.sendHttpRequest(KEYWORD_URL,Value.PAGE_SEARCH);
                 handler.postDelayed(new Runnable() {

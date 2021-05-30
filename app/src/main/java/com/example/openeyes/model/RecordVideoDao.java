@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface RecordVideoDao {
 
-    @Query("SELECT * FROM video_items WHERE operation = 0 AND user_count IS :count")
+    @Query("SELECT * FROM video_items WHERE user_count IS :count AND operation = 0 ORDER BY watch_time DESC")
     List<VideoItem> getAll(String count);
 
     @Insert
