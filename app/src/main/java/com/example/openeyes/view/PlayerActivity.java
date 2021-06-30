@@ -108,6 +108,7 @@ public class PlayerActivity extends AppCompatActivity {
         Glide.with(PlayerActivity.this).load(videoItem.getHeadIconUrl()).into(authorHeadIcon);
         authorName.setText(videoItem.getAuthorName());
         authorDescription.setText(videoItem.getAuthorDescription());
+        VideoItem item = dao.queryStatus(videoItem.getVideoId(), count);
         if(dao.queryStatus(videoItem.getVideoId(), count) != null){
             imageLike.setBackground(getDrawable(R.drawable.ic_like_already));
             textLike.setText("已收藏");
@@ -168,6 +169,8 @@ public class PlayerActivity extends AppCompatActivity {
         dao = VideoDatabase.getInstance(getApplicationContext()).getLikeVideoDao();
         recordVideoDao = VideoDatabase.getInstance(getApplicationContext()).getRecordVideoDao();
         countDao = VideoDatabase.getInstance(getApplicationContext()).getPersonalCountDao();
+        //得到已登录的账号
+        count = countDao.queryRecentlyLogin();
     }
 
     /*

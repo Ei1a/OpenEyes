@@ -187,7 +187,7 @@ public class PersonImformationActivity extends AppCompatActivity {
         buttonChangeHeadIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PersonImformationActivity.this, "更换头像", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(PersonImformationActivity.this, "更换头像", Toast.LENGTH_SHORT).show();
                 EasyPhotos.createAlbum(PersonImformationActivity.this, true, false, GlideEngine.getInstance())
                         .setFileProviderAuthority("com.example.openeyes")
                         .start(new SelectCallback() {
